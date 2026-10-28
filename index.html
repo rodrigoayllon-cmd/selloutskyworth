@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sell-Out">
+<meta name="theme-color" content="#0f172a">
+<meta name="robots" content="noindex, nofollow">
+<title>Skyworth Sell-Out</title>
+<link rel="preconnect" href="https://script.google.com">
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--ink2:#334155;--mut:#64748b;--line:#e2e8f0;--blue:#2563eb;--blue2:#1d4ed8;--blueBg:#eff6ff;--indigo:#4f46e5;--green:#059669;--greenBg:#ecfdf5;--red:#dc2626;--redBg:#fef2f2;--amber:#b45309;--amberBg:#fffbeb;--dark:#0f172a;--r:14px;--safeB:env(safe-area-inset-bottom,0px);--safeT:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+[hidden]{display:none!important}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3,h4,p{margin:0}
+.muted{color:var(--mut);font-size:13px}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+/* Barra superior */
+.topbar{position:sticky;top:0;z-index:20;background:var(--dark);color:#fff;padding:calc(10px + var(--safeT)) 14px 10px;display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.topbar .who{flex:1;min-width:0}
+.topbar .who b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .who span{font-size:12px;color:#94a3b8}
+.topbar .net{width:9px;height:9px;border-radius:50%;background:#34d399;flex:none}
+.topbar .net.off{background:#f87171}
+.iconbtn{background:#1e293b;border:1px solid #334155;color:#cbd5e1;border-radius:10px;padding:7px 10px;font-size:12px;font-weight:600}
+main{max-width:720px;margin:0 auto;padding:12px 12px calc(88px + var(--safeB))}
+/* Tarjetas */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.step-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.step-head h3{font-size:15px}
+.step-head p{font-size:12px;color:var(--mut)}
+.step-head>div{flex:1;min-width:0}
+.num{width:28px;height:28px;border-radius:8px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center;flex:none}
+.num.done{background:var(--green)}
+.lbl{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2);margin:12px 0 6px}
+.lbl:first-of-type{margin-top:0}
+.req{color:var(--red)}
+input[type=text],input[type=search],input[type=password],select{width:100%;min-height:48px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;padding:10px 12px;font-size:16px;outline:none}
+input:focus,select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+input:disabled,select:disabled{opacity:.6}
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 14px;border-radius:12px;border:1px solid transparent;font-weight:700;font-size:15px;text-decoration:none;user-select:none}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.55;pointer-events:none}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.indigo{background:var(--indigo);color:#fff}
+.btn.dark{background:#1e293b;color:#fff}
+.btn.success{background:var(--green);color:#fff}
+.btn.ghost{background:#fff;border-color:#cbd5e1;color:var(--ink2)}
+.btn.sm{min-height:38px;padding:6px 12px;font-size:13px;border-radius:10px}
+.btn.block{width:100%}
+.btn.big{width:100%;min-height:56px;font-size:16px;background:linear-gradient(90deg,var(--blue),var(--indigo));color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.25)}
+.link{background:none;border:0;color:var(--blue);font-weight:600;font-size:13px;padding:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* Segmentados */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#e2e8f0;padding:4px;border-radius:12px}
+.seg.seg3{grid-template-columns:repeat(3,1fr)}
+.seg button{border:0;background:transparent;border-radius:9px;padding:9px 6px;font-weight:700;font-size:13px;color:var(--ink2);min-height:44px;line-height:1.15}
+.seg button small{display:block;font-weight:500;font-size:11px;color:var(--mut)}
+.seg button.on{background:#fff;color:var(--blue2);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg button:disabled{opacity:.45}
+/* Chips */
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.chip.on{background:var(--dark);border-color:var(--dark);color:#fff}
+/* Lista de PDV */
+.list{border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:52vh;margin-top:8px;background:#fff}
+.item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid #f1f5f9;background:#fff;padding:11px 12px}
+.item:last-child{border-bottom:0}
+.item:active{background:var(--blueBg)}
+.item .t{flex:1;min-width:0}
+.item b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item small{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{flex:none;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:#f1f5f9;color:var(--ink2)}
+.tag.blue{background:var(--blueBg);color:var(--blue2)}
+.tag.green{background:var(--greenBg);color:var(--green)}
+.tag.purple{background:#f5f3ff;color:#6d28d9}
+.empty{padding:16px;text-align:center;color:var(--mut);font-size:13px}
+.sel-card{display:flex;gap:10px;align-items:center;background:var(--blueBg);border:1px solid #bfdbfe;border-radius:12px;padding:10px 12px;margin-top:8px}
+.sel-card .t{flex:1;min-width:0}
+.sel-card b{font-size:14px}
+.sel-card small{display:block;font-size:12px;color:var(--ink2)}
+.tv{display:flex;gap:10px;align-items:center;background:var(--dark);color:#fff;border-radius:12px;padding:10px 12px;margin-top:8px}
+.tv .in{width:44px;height:44px;border-radius:10px;background:#1e293b;display:grid;place-items:center;font-weight:800;color:#60a5fa;flex:none}
+.tv small{display:block;color:#94a3b8;font-size:12px}
+/* Serie */
+.preview{margin-top:10px;border-radius:12px;overflow:hidden;background:#0b1220;position:relative}
+.preview img{display:block;width:100%;max-height:170px;object-fit:contain}
+.preview p{color:#cbd5e1;font-size:12px;padding:8px 10px;background:#111827}
+.serial-wrap{position:relative}
+.serial-wrap input{font-family:ui-monospace,Consolas,monospace;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding-right:96px}
+.serial-wrap .tag{position:absolute;right:8px;top:50%;transform:translateY(-50%)}
+.msg{font-size:13px;margin-top:6px;font-weight:600}
+.msg.err{color:var(--red)}
+.msg.ok{color:var(--green)}
+.msg.warn{color:var(--amber)}
+.cands{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cands button{border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:8px;padding:6px 10px;font-size:13px;font-family:ui-monospace,Consolas,monospace;font-weight:700}
+/* Fotos */
+.slot{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:#f8fafc;border-radius:12px;padding:8px;margin-bottom:8px}
+.slot.off{opacity:.55}
+.thumb{width:56px;height:56px;border-radius:10px;background:#e2e8f0;display:grid;place-items:center;overflow:hidden;flex:none;color:#94a3b8;font-size:22px}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.slot .t{flex:1;min-width:0}
+.slot b{display:block;font-size:13px}
+.slot small{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot small.ok{color:var(--green);font-weight:600}
+.slot label{flex:none}
+/* Barra inferior */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:6px 6px calc(6px + var(--safeB))}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--mut);padding:6px 0;border-radius:10px}
+.tabbar button svg{width:22px;height:22px}
+.tabbar button.on{color:var(--blue);background:var(--blueBg)}
+.badge{background:var(--green);color:#fff;border-radius:999px;font-size:10px;padding:0 6px;margin-left:2px}
+/* Historial */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.kpi span{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase}
+.kpi b{display:block;font-size:24px}
+.rec{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px}
+.rec .top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px}
+.rec .serial{font-family:ui-monospace,Consolas,monospace;font-weight:800;font-size:14px;word-break:break-all}
+.rec p{font-size:13px;color:var(--ink2)}
+.rec .links{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.rec .links a{font-size:12px;font-weight:600;color:var(--blue2);background:var(--blueBg);border-radius:8px;padding:5px 9px;text-decoration:none}
+/* Login */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 30% 0,#1e3a8a 0,#0f172a 60%)}
+.login .box{width:100%;max-width:380px;background:#fff;border-radius:20px;padding:24px 20px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.login h1{font-size:20px;margin:12px 0 4px}
+.login input{text-transform:uppercase;letter-spacing:.15em;text-align:center;font-weight:700;font-size:20px;margin:16px 0 10px}
+/* Escáner */
+.scanner{position:fixed;inset:0;z-index:50;background:#000;display:flex;flex-direction:column;color:#fff}
+.scanner .stage{position:relative;flex:1;overflow:hidden;display:grid;place-items:center}
+.scanner video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.guide{position:absolute;left:5%;right:5%;top:27.5%;height:45%;border:3px solid rgba(52,211,153,.9);border-radius:16px;box-shadow:0 0 0 100vmax rgba(0,0,0,.45);pointer-events:none}
+.guide.hit{border-color:#fbbf24}
+.laser{position:absolute;left:4%;right:4%;height:2px;background:#ef4444;box-shadow:0 0 10px 2px rgba(239,68,68,.8);animation:sc 2s ease-in-out infinite}
+@keyframes sc{0%,100%{top:8%}50%{top:90%}}
+.scanner .msgbox{position:relative;z-index:2;max-width:420px;padding:20px;text-align:center;font-size:14px;line-height:1.5;color:#e2e8f0}
+.scanner .msgbox b{color:#fff}
+.scanner .hud{position:absolute;top:calc(12px + var(--safeT));left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;z-index:3}
+.scanner .hud span{background:rgba(0,0,0,.6);border-radius:999px;padding:6px 12px;font-size:13px}
+.scanner .hud button{background:rgba(0,0,0,.6);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.scanner .ctrls{background:#0b1220;padding:12px 12px calc(12px + var(--safeB));display:grid;gap:8px}
+/* Modal */
+.modal{position:fixed;inset:0;z-index:40;background:rgba(15,23,42,.6);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:16px 16px calc(16px + var(--safeB));max-height:92vh;overflow:auto}
+@media(min-width:640px){.modal{align-items:center}.sheet{border-radius:20px}}
+/* Toast y carga */
+.toast{position:fixed;left:12px;right:12px;bottom:calc(80px + var(--safeB));z-index:60;max-width:520px;margin:0 auto;background:var(--dark);color:#fff;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;gap:10px;align-items:center}
+.toast i{width:10px;height:10px;border-radius:50%;background:#34d399;flex:none}
+.toast.error i{background:#f87171}.toast.warning i{background:#fbbf24}
+.busy{position:fixed;inset:0;z-index:70;background:rgba(15,23,42,.7);display:grid;place-items:center;color:#fff;text-align:center;padding:24px}
+.spin{width:44px;height:44px;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:rot 1s linear infinite;margin:0 auto 12px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.done-card{background:var(--greenBg);border:1px solid #a7f3d0;color:#065f46;border-radius:12px;padding:12px;margin-bottom:12px;font-size:14px}
+@media(min-width:720px){.kpis{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- ======================= ACCESO ======================= -->
+<section id="viewLogin" class="login" hidden>
+  <form class="box" id="loginForm" autocomplete="off">
+    <div class="logo" style="color:#fff">SW</div>
+    <h1>Skyworth Sell-Out</h1>
+    <p class="muted">Acceso solo para personal autorizado. Ingresa el código que te asignó el administrador.</p>
+    <input id="inpCodigo" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="CÓDIGO" maxlength="20" aria-label="Código de acceso">
+    <label class="muted" style="display:flex;gap:6px;align-items:center;margin-bottom:12px"><input type="checkbox" id="chkVerCodigo"> Mostrar código</label>
+    <button class="btn primary block" id="btnLogin" type="submit">Ingresar</button>
+    <p class="msg err" id="loginMsg"></p>
+  </form>
+</section>
+
+<!-- ======================= APP ======================= -->
+<header class="topbar" id="topbar" hidden>
+  <div class="logo">SW</div>
+  <div class="who"><b id="userName">—</b><span id="userInfo">—</span></div>
+  <span class="net" id="netDot" title="Conexión"></span>
+  <button class="iconbtn" id="btnLogout" type="button">Salir</button>
+</header>
+
+<main id="mainApp" hidden>
+  <!-- ---------- REGISTRAR ---------- -->
+  <section id="viewForm">
+    <div id="doneCard" class="done-card" hidden></div>
+
+    <div class="card">
+      <div class="seg" id="segModalidad">
+        <button type="button" data-v="VENTA CLIENTE FINAL" class="on"><span>Cliente Final</span><small>Serie + Nota + Póliza</small></button>
+        <button type="button" data-v="VENTA A PDV"><span>Venta a PDV</span><small>Serie + Nota</small></button>
+      </div>
+    </div>
+
+    <div class="card" id="step1">
+      <div class="step-head">
+        <span class="num" id="n1">1</span>
+        <div><h3>Regional y mayorista</h3><p id="vendedorLbl">Vendedor: —</p></div>
+        <button type="button" class="link" id="btnReset">Limpiar</button>
+      </div>
+      <label class="lbl">Regional <span class="req">*</span></label>
+      <div class="seg seg3" id="segRegional">
+        <button type="button" data-v="LA PAZ">La Paz</button>
+        <button type="button" data-v="COCHABAMBA">Cochabamba</button>
+        <button type="button" data-v="SANTA CRUZ">Santa Cruz</button>
+      </div>
+      <label class="lbl" for="selMayorista">Mayorista <span class="req">*</span></label>
+      <select id="selMayorista"></select>
+    </div>
+
+    <div class="card" id="step2">
+      <div class="step-head">
+        <span class="num" id="n2">2</span>
+        <div><h3>Comercial (PDV) <span class="req">*</span></h3><p id="pdvCount">—</p></div>
+        <button type="button" class="link" id="btnNuevoPdv">+ Nuevo</button>
+      </div>
+      <div class="chips" id="zoneChips"></div>
+      <input id="inpPdv" type="search" autocomplete="off" placeholder="Buscar tienda, dueño o zona…">
+      <div class="list" id="pdvList" hidden></div>
+      <div class="sel-card" id="pdvCard" hidden>
+        <div class="t"><b id="pdvName">—</b><small id="pdvMeta">—</small></div>
+        <button type="button" class="link" id="btnCambiarPdv">Cambiar</button>
+      </div>
+    </div>
+
+    <div class="card" id="step3">
+      <div class="step-head">
+        <span class="num" id="n3">3</span>
+        <div><h3>Modelo de TV <span class="req">*</span></h3><p id="skuCount">—</p></div>
+      </div>
+      <div class="chips" id="inchChips"></div>
+      <select id="selModelo"></select>
+      <div class="tv"><div class="in" id="tvIn">55"</div><div><b class="mono" id="tvSku">—</b><small id="tvDesc">—</small></div></div>
+    </div>
+
+    <div class="card" id="step4">
+      <div class="step-head">
+        <span class="num" id="n4">4</span>
+        <div><h3>Número de serie <span class="req">*</span></h3><p>Escanea el código de barras de la etiqueta</p></div>
+      </div>
+      <div class="grid2">
+        <button type="button" class="btn indigo" id="btnScan">Escanear en vivo</button>
+        <label class="btn dark" for="fileEtiqueta">Foto de etiqueta</label>
+      </div>
+      <div class="preview" id="scanPreview" hidden><img id="scanImg" alt="Etiqueta de serie"><p id="scanMsg">—</p></div>
+      <label class="lbl" for="inpSerie" style="margin-top:12px">Serie verificada <span class="req">*</span></label>
+      <div class="serial-wrap">
+        <input id="inpSerie" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" placeholder="Escanea o escribe la serie">
+        <span class="tag" id="serieTag">Manual</span>
+      </div>
+      <div class="cands" id="serieCands" hidden></div>
+      <p class="msg" id="serieMsg"></p>
+    </div>
+
+    <div class="card" id="step5">
+      <div class="step-head">
+        <span class="num" id="n5">5</span>
+        <div><h3>Evidencias fotográficas <span class="req">*</span></h3><p id="evidSub">Serie, nota de venta y póliza</p></div>
+      </div>
+      <div class="slot" id="slotSerie">
+        <div class="thumb" id="thSerie">▦</div>
+        <div class="t"><b>Foto de serie (etiqueta) <span class="req">*</span></b><small id="stSerie">Se toma al escanear</small></div>
+        <label class="btn ghost sm" for="fileEtiqueta">Tomar</label>
+      </div>
+      <div class="slot" id="slotNota">
+        <div class="thumb" id="thNota">🧾</div>
+        <div class="t"><b>Nota de venta / factura <span class="req">*</span></b><small id="stNota">Sin foto</small></div>
+        <label class="btn ghost sm" for="fileNota">Tomar</label>
+      </div>
+      <div class="slot" id="slotPoliza">
+        <div class="thumb" id="thPoliza">🛡</div>
+        <div class="t"><b>Póliza de garantía <span class="req" id="reqPoliza">*</span></b><small id="stPoliza">Sin foto</small></div>
+        <label class="btn ghost sm" for="filePoliza">Tomar</label>
+      </div>
+      <label class="lbl" for="inpObs">Observaciones / teléfono cliente (opcional)</label>
+      <input id="inpObs" type="text" maxlength="300" placeholder="Ej. Nro nota 00451">
+    </div>
+
+    <button type="button" class="btn big" id="btnSubmit">Registrar venta</button>
+  </section>
+
+  <!-- ---------- HISTORIAL ---------- -->
+  <section id="viewHistory" hidden>
+    <div class="kpis">
+      <div class="kpi"><span>Total</span><b id="kTotal">0</b><small class="muted" id="kSplit">—</small></div>
+      <div class="kpi"><span>La Paz</span><b id="kLpz" style="color:var(--blue)">0</b></div>
+      <div class="kpi"><span>Cochabamba</span><b id="kCbba" style="color:var(--indigo)">0</b></div>
+      <div class="kpi"><span>Santa Cruz</span><b id="kScz" style="color:var(--green)">0</b></div>
+    </div>
+    <div class="card">
+      <div class="step-head"><div><h3>Registros en la nube</h3><p id="histInfo">—</p></div><button type="button" class="btn ghost sm" id="btnRefresh">Actualizar</button></div>
+      <input id="fSearch" type="search" placeholder="Buscar serie, comercial, mayorista, SKU…">
+      <div class="grid2" style="margin-top:8px">
+        <select id="fRegional"><option value="ALL">Todas las regionales</option><option>LA PAZ</option><option>COCHABAMBA</option><option>SANTA CRUZ</option></select>
+        <select id="fModo"><option value="ALL">Todas las modalidades</option><option value="VENTA CLIENTE FINAL">Cliente Final</option><option value="VENTA A PDV">Venta a PDV</option></select>
+      </div>
+      <button type="button" class="btn success sm block" id="btnCsv" style="margin-top:8px" hidden>Exportar a Excel (CSV)</button>
+    </div>
+    <div id="histList"></div>
+  </section>
+
+  <!-- ---------- CATÁLOGO ---------- -->
+  <section id="viewCatalog" hidden>
+    <div class="card">
+      <div class="step-head"><div><h3>Directorio de comerciales</h3><p id="cInfo">—</p></div></div>
+      <select id="cReg"><option value="ALL">Todas las regionales</option><option>LA PAZ</option><option>COCHABAMBA</option><option>SANTA CRUZ</option></select>
+      <input id="cSearch" type="search" placeholder="Buscar tienda, dueño o zona…" style="margin-top:8px">
+      <div class="list" id="cList"></div>
+    </div>
+    <div class="card"><h3 style="margin-bottom:8px">Mayoristas por regional</h3><div id="cMay"></div></div>
+    <div class="card"><h3>Modelos Skyworth</h3><div class="list" id="cSkus"></div></div>
+  </section>
+</main>
+
+<nav class="tabbar" id="tabbar" hidden>
+  <button type="button" data-tab="form" class="on"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>Registrar</button>
+  <button type="button" data-tab="history"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg><span>Mis registros <span class="badge" id="navBadge" hidden>0</span></span></button>
+  <button type="button" data-tab="catalog"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>Catálogo</button>
+</nav>
+
+<!-- ======================= ESCÁNER EN VIVO ======================= -->
+<div class="scanner" id="scanner" hidden>
+  <div class="stage">
+    <video id="video" playsinline muted autoplay></video>
+    <div class="guide" id="guide" hidden><div class="laser"></div></div>
+    <div class="hud">
+      <span id="scanStatus">Iniciando cámara…</span>
+      <div style="display:flex;gap:6px">
+        <button type="button" id="btnTorch" hidden>Linterna</button>
+        <button type="button" id="btnSwitchCam" hidden>Cambiar cámara</button>
+      </div>
+    </div>
+    <div class="msgbox" id="scanHelp" hidden></div>
+  </div>
+  <div class="ctrls">
+    <button type="button" class="btn success block" id="btnSnap" hidden>Capturar foto y leer serie</button>
+    <label class="btn indigo block" for="fileEtiqueta" id="lblNativeCam">Usar cámara del teléfono (foto)</label>
+    <button type="button" class="btn dark block" id="btnCloseScan">Cerrar</button>
+  </div>
+</div>
+
+<!-- ======================= NUEVO PDV ======================= -->
+<div class="modal" id="modalPdv" hidden>
+  <div class="sheet">
+    <div class="step-head"><div><h3>Nuevo comercial (PDV)</h3><p>Se guarda en la nube para todo el equipo</p></div><button type="button" class="link" id="btnCloseModal">Cerrar</button></div>
+    <label class="lbl" for="nRegional">Regional</label>
+    <select id="nRegional"><option>LA PAZ</option><option>COCHABAMBA</option><option>SANTA CRUZ</option></select>
+    <label class="lbl" for="nNombre">Nombre del comercial <span class="req">*</span></label>
+    <input id="nNombre" type="text" maxlength="80" placeholder="Ej. Comercial Estrella">
+    <label class="lbl" for="nDueno">Dueño / encargado</label>
+    <input id="nDueno" type="text" maxlength="80" placeholder="Ej. JUAN PEREZ">
+    <label class="lbl" for="nZona">Zona comercial / ciudad</label>
+    <input id="nZona" type="text" maxlength="80" placeholder="Ej. UYUSTUS (LA PAZ)">
+    <button type="button" class="btn primary block" id="btnSavePdv" style="margin-top:14px">Guardar y seleccionar</button>
+  </div>
+</div>
+
+<div class="busy" id="busy" hidden><div><div class="spin"></div><b id="busyText">Enviando…</b><p class="muted" style="color:#cbd5e1;margin-top:6px">No cierres la aplicación.</p></div></div>
+<div class="toast" id="toast" hidden><i></i><span id="toastText"></span></div>
+
+<input id="fileEtiqueta" type="file" accept="image/*" capture="environment" hidden>
+<input id="fileNota" type="file" accept="image/*" capture="environment" hidden>
+<input id="filePoliza" type="file" accept="image/*" capture="environment" hidden>
+
+<script>
+'use strict';
+// ===================== CONFIGURACIÓN =====================
+const CONFIG = {
+  // URL de la implementación de Apps Script (termina en /exec)
+  API_URL: 'https://script.google.com/macros/s/AKfycbzhJ81kkoIR4LqJZFasSqy4PmsRA04VDfKKwGe2vEygk7Gyn43u4oqmP3cBNI7lo1fa1Q/exec',
+  // Lector zxing-cpp (WebAssembly) para teléfonos sin lector nativo (iPhone)
+  DETECTOR_URL: 'https://cdn.jsdelivr.net/npm/barcode-detector@3.0.8/dist/iife/ponyfill.js'
+};
+
+// ===================== BASE MAESTRA (LISTA DE PDVS campana .xlsx) =====================
+// Formato por línea: nro|nombre|dueño|índice de zona|vendedores PDV|clasificación
+const RAW = {
+  'LA PAZ': {
+    pre: 'LA -',
+    may: ['GLADYS QUISBERT', 'GREGORIO PEREZ', 'ADELEY RAMOS', 'ALEJANDRO FLORES', 'FERNANDO CRUZ'],
+    zonas: ['UYUSTUS (LA PAZ)', 'ELOY SALMON (LA PAZ)', 'MOLINO EL GALLO (COCHABAMBA)', '16 DE JULIO (LA PAZ)', 'VILLA DOLORES (LA PAZ)', 'TIWANAKU (LA PAZ)', 'FERMIN LOPEZ (ORURO)'],
+    filas: `
+1|casa Gladys|GLADYS QUISBERT|0|3
+2|Electrónica Z&M|VAINA ELENA TRUJILLO|0|3
+3|Tienda San Tiago|ZULMA LUCANA|0|3
+4|casa España|DAVID VERA|0|3
+5|Tienda G&S|Sin especificar|0|3
+6|comercial J&A|ISRAEL MMANI|0|3
+7|M&J|JENNY TRUJILLO|0|2
+8|G&S|GREGORIO PEREZ|0|3
+9|J&E|EULOGIA CHIU|0|2
+10|Galería Ctornan local 42|PABLO CHIA|0|1
+11|Galería Ctornan local 5|ALVARO TICONA ROCHA|0|2
+12|Galería Ctornan local 6|ALFREDO GONZALES|0|2
+13|Galeria Ctornan|ELÍAS CHIA|0|2
+14|Alienn|ALIZON ZENTENO|0|8
+15|Global Center I|NELLY ANTONIO ROJAS|0|2
+16|global Center II|NELLY ANTONIO ROJAS|0|1
+17|Daniel|DANIEL CHIGUA|0|4
+18|Electronica F&J|RAFAEL XIMÉNEZ|0|2
+19|Electronic C&J|CRISTIAN ALIAGA|0|3
+20|G&A|ARIEL AGUILAR|0|7
+21|Hogar Feliz|RONALD PÉREZ|0|3
+22|Santiago II|ZULMA LUCANA|0|2
+23|Ana Corazón|WALTER QUINO|1|3
+24|casa Cristina|EDITH ADUVIRI|1|2
+25|Dame|MIGUEL DIAZ|1|3
+26|C&M|MARCO MAMANI|1|1
+27|casa Márquez|EDWIN YUPANQUI|1|3
+28|Comercial Mercado|GONZALO MERCADO|1|2
+29|Gal. Gran Poder Local 7|GABRIEL LUCANA|1|2
+30|Gal. gran poder local 6|Sin especificar|1|2
+31|Comercial ZAID|ALFREDO DIAZ|2|4
+32|G&N Electronics|GABRIEL LUCANA|1|2
+33|casa Beto|ALBERTO MAMANI|1|2
+34|Electronics|JOSE LUCANA CAJA|1|2
+35|gal Eloy Salmón|JORGE LUCANA|1|1
+36|Emmanuel|HÉCTOR ACNOTAR|3|2
+37|casa Calle|CARMEN CALLE|3|1
+38|TV shop|GERARDO MARÍN CARDENAS|3|2
+39|M&C|FLAVIO MARIN|3|2
+40|Casa Torrez|SILVIA TORRES|3|1
+41|Alfa & Omega|LUIS QUISPE|3|3
+42|Dama|MARCO APAZA|3|1
+43|Sony|FREDY CONDORI|3|2
+44|J&M|MERY ACEBEY|3|1
+45|Bella Luna|ZOBEIDA QUISBERT|3|4
+46|Yana Electronic|ABEL YANA|3|2
+47|Aljhamar|ALEJANDRO FLORES CHAVEZ|3|5
+48|Flores|OSCAR FLORES CHAMBI|3|2
+49|Vida smar|MAGALÍ MENDOZA|3|2
+50|J&L|JESÚS LLANQUE|3|4
+51|Dama|MARCO APAZA|4|3
+52|gal.Fuentes|CARLOS CHOQUE|4|2
+53|Triples Atore|ALFREDO CHOQUE|4|3
+54|Homer Hagar|GABY YUJRA APAZA|4|2
+55|gal Corazón de Jesús|TEO TICONA|4|2
+56|galería Alexander local 1|JHON QUISPE|4|2
+57|Audio visión J&L|LIDIA WANQUIRI|4|3
+58|Electrodomésticos Y&H|HAROLD TICONA|4|2
+59|Aries|ROSA BALBOA|4|2
+60|Gal. Sagitario|JOSE LUIS YAVINCHA|4|3
+61|Génesis|SERGIO CALDERON|4|2
+62|M&A|WILLY PAXI|4|3
+63|Gema|FELIPE CALLE|4|1
+64|J&J|JOHNNY TARQUI|4|3
+65|SN|FORTUNATA TARQUI|4|2
+66|J&V elelectronics|RUT MAMANI|4|2
+67|Hogar R|RONALDO PÉREZ|0|3
+68|Nicole|CRISTIAN BAILEMOS RODRÍGUEZ|0|2
+69|Lujan II|DANIEL MAMANI|0|2
+70|Importadora J & I|JOSUÉ CHAMBI|0|2
+71|Mades|MERCEDES QUISBERT|0|1
+72|Comercial Ceci|DOLÍ SÁCALOS FERNANDEZ|0|2
+73|comercial Aliaga|MIRIAN ALIAGA|0|1
+74|e click|NORA CHIUA|0|2
+75|e click II|NORA CHIUA|0|2
+76|Importaciones Lushos|HORACIO ALBARRACIN|0|5
+77|Distrijuidora Julian|DIEGO RODRIGUEZ|0|4
+78|Coco|JORGE ENRIQUE PINTO APAZA|0|3
+79|M&J Technologies|JENNY TRUJILLO|0|3
+80|ImpoMarc|OSCAR MARCA|0|2
+81|Power Electronic|PABLO BUSTILLOS|0|2
+82|J&M ELECTRÓNICS|IVAN CANQUI|0|4
+83|accesos techo|CRISTIAN VELASCO|0|2
+84|casa Axel|BEATRIZ FRANCO|0|3
+85|comercial Calzada|CRISTINA CALZADA|0|3
+86|J&L|MIRIAN TRUJILLO|0|3
+87|J&L II|WILMER TRUJILLO|0|3
+88|ImpoMarc|RUT MARCA|0|2
+89|J&L III|WILMER TRUJILLO|0|2
+90|Electrónica Luna|WNDY ARTEAGA|0|3
+91|Importa dora Joshua|CRISTIAN ACHOCANA|0|3
+92|comercial Massie|VANESA PIEZA|0|3
+93|Lujan I|ANTONIO MAMANI|0|4
+94|Importaciones Zoe|PEDRO QUISBERT|0|2
+95|J&C|JOSE ANTONIO COLQUE|0|3
+96|Imperio Homer|FERNANDO VELAZQUEZ LOBATÓN|0|2
+97|GARY Electronic|GARY CHAVEZ|0|2
+98|smart G|EDWIN GONZÁLEZ|0|4
+99|casa Dora|DORA GONZÁLEZ|0|3
+100|Electronic E&T|ELVIRA TANCARA|0|2
+101|smart House|ALDO CALZADILLA|0|5
+102|Nyls|GUALDO CHIUA|0|2
+103|Matbel|VICKY CABALLERO|0|2
+104|J&N Atore|NELSON RIOJA|0|3
+105|JcJ Electronics|JULIO CESAR NINA|0|4
+106|Electro Casa|MARCELO ROJAS|0|2
+108|G&G|DANIEL TAQUIR|0|3
+109|Casa Salir|SABINA SILLO MAMANI|1|2
+110|gal Nora bel local 1|ELIAS TRUJILLO|1|3
+111|Cesi & Joseph|JUANCARLOS CLAROS|1|1
+112|GCO|MARIALUIZA SAVEEDRA|1|2
+113|GCO II|MARÍA LUISA SAAVEDRA|1|2
+114|San Antonio|AMARILDO GUARACHI|1|2
+115|C&D|DAVID MAMANI|1|4
+116|Sony|DIEGO CHOQUE CASILLA|4|1
+117|centro comercial Elena|ELENA PAUCARA|4|4
+118|Santiago D&R|REBECA MAMANI CHINO|0|3
+119|Q ADOSH|FERNANDO INTURIAS|4|1
+120|GC Storeds|REÚNE GUZMAN|4|5
+121|ES electronic Store|DAVID MAMANI|4|4
+122|Tatiana|TATIANA MARIA ISABEL|4|1
+123|Djma II|MARCO APAZA|4|2
+124|Gal Apaza local 2|IVAN MAMANI|4|3
+125|Casa Sonia|WILMER TAPIA GUZMAN|4|1
+126|Mau-g|OSCAR RODRIGO MARCA|4|2
+127|blamcompany|MÓNICA ALI|4|1
+128|Electronics WachiO|LIMBER PATZI|4|4
+129|Electronic Yanta|MARIO COLQUE|4|2
+130|Urqupiña|JAVIER FERNANDO SOTO|4|1
+131|central|JAVIER SOTO|4|2
+132|Sensal Carvajal|JAVIER SOTO|4|2
+133|LIBRA|ALEJANDRA CALLISALLA|4|2
+134|Luz del Alma|YAZMANI VENTURA|4|3
+135|Isabela|AMÉRICO ALIAGA|4|2
+136|Ortiz|LUIS ORTIZ|4|2
+137|Electrónica WCL|WILLY CABALLERO|4|1
+138|Open Music|TANIA CATARI|3|1
+139|A&E|ALDAIR PEREZ|3|2
+140|C&A|ALVARO MAYTA|3|4
+141|Casa Aldo|ALDO JIMENEZ|3|1
+142|Philips|PITER DELGADO|3|2
+143|G&D|GEDION QUISPE CHOQUE|3|3
+144|Virginia|VIRGINIA SOTO|3|1
+145|mundo Electrónico|ESTEBAN CALISTA|3|3
+146|Comercial Marit3|MARÍA TERESA ILAQUITA HUANCA|3|2
+147|Bella Luna II|ZOBEIDA HUMEREZ|3|1
+148|Lalo|LALO YANA|3|2
+149|Eri Smart|ERIKA QUISPE|3|4
+150|VIDAA Smart|MAGALÍ LOURDES MENDOZA|3|3
+151|LG|CRISTIAN FLORES|3|2
+152|Smart Tvs|SILVIA FLORES|3|3
+153|R&E importaciones|RODRIGO MOLLO|3|5
+154|LG|JOSE LUIS ADUVIRI|3|4
+155|R&E|LIZET CEVALLOS|3|2
+156|Ilda|ILDA CASTRÓ|3|1
+157|Nanos|MICHAEL ADEMAR COLQUE|3|1
+158|ChiQ|CARLA COLOQUE|3|2
+159|Multimarcas|ROXANA SOTO CALLE|3|4
+160|M&F|MARISOL SOTO|3|3
+161|Chiq|GUSTAVO ALIAGA|3|3
+162|J&J|JHONY TARQUI|4|3
+163|Electrónica Juan|JUANCARLOS QUISPE CHAVEZ|5|2
+164|Santiago|EDY CUMARA|5|5
+165|E&Z|EDGAR QUISPE CHAVEZ|5|3
+166|Magis|MAGDALENA CUMARA|5|3
+167|Tienda Cortes|EFRAÍN CORTES|5|1
+168|Importadora Rojas|MARCELO ROJAS|5|1
+169|Diego|DIEGO LEYVA|5|3
+170|Calderón|JHONY CALDERÓN|5|2
+171|smart TV|RODRIGO CUMARA|5|2
+172|Calderón II|JHONY CALDERÓN|5|2
+173|Call9|JUAN TEUJILLO|5|3
+174|Electro vik|VIRGINIA TICONA|5|3
+175|T & G|JUAN TRUJILLO|5|4
+176|Ángeles|ORLANDO IGNACIO|5|2
+177|Galos|JORGE CASILLA|5|3
+178|Pika Electronic|EVA CASILLAS|5|2
+179|local 10|CLAUDIO CUMARA|5|2
+180|Sergio|SERGIO N|5|2
+181|J&V|VICTORIA TARQUI|5|2
+182|Micky|MAGDALENA CUMARA|5|1
+183|Jaime|JAIME CHAVEZ|5|3
+184|Rodríguez|CRISTIAN RODRÍGUEZ|5|2
+185|ICG|FERNANDO CRUZ|6|2
+186|Fernando Moroco|SHIRLEY REVOLLO|6|3
+187|comercial lps Gallos|JORGE FERNÁNDEZ COSSIO|6|2
+188|Comercial Dany|DANIEL ALCALA|6|4
+189|comercial Amén|MERY NICOLÁS HUAYTA|6|4
+190|Comercial Santiaguito|SANTIAGO BALTAZAR|6|4
+191|Comercial Anubis|JOSE FERNANDO CHOQUE|6|6
+192|AmeG|ALEX LLAVE|6|5
+193|Maravilla|BORIS APAZA|6|6
+194|COMERCIAL DANY|GERMAN JESUS CHOQUE|6|9
+195|Belen|ESTEFANY CHALLAPA|6|3
+196|Comercial Henry|OSEAS CALLE MAMANI|6|3`
+  },
+  'COCHABAMBA': {
+    pre: 'COC-',
+    may: ['PATRICIA VELIZ', 'VERONICA CHALLAPA', 'ALBERTO TERAN', 'ALFREDO DIAZ'],
+    zonas: ['MOLINO EL GALLO (COCHABAMBA)', 'MOLINO SAN LUIS (COCHABAMBA)', 'QUILLACOLLO (COCHABAMBA)', 'SUPERMALL (COCHABAMBA)', 'ICE NORTE (COCHABAMBA)', 'MERCADO CENTRAL O PAMPA (COCHABAMBA)', 'TIENDA AMIGA', 'LA PAMPA (COCHABAMBA)', 'CALLE ANGOSTURA'],
+    filas: `
+1|Smart shop|CARLOS GUTIERREZ|0|6|C
+2|shanty eléctrics|DELFINA CHOQUE|0|6|A
+3|Comercial A&T 2|ANTONIO TERAN|0|4|A
+4|comercial el exclusivo|JHANET QUIROS|0|3|B
+5|Comercial punto electrónico|VIVIANA PÉREZ|0|3|A
+6|Comercial punto electrónico|VIVIANA PEREZ|0|4|A
+7|Comercial Ugarte|ORLANDO UGARTE|0|3|C
+8|Comercial Morales|WILIAMS MORALES|0|2|C
+9|Comercial NEXTVICION|CRISTIAN ALKA|0|3|C
+10|Comercial Tito|MARIO TITO|0|2|C
+11|Comercial smart shop|CARLOS GONZÁLEZ|0|5|C
+12|Comercial Gaelito|ESTELA SEQUEIROS|0|3|C
+13|Comercial infinix|NOEMÍ BLANCO|0|3|C
+14|Comercial jhondavis telecenter|JHONATAN VALLEJOS|0|3|C
+15|Comercial D DIAZ|ALFREDO DÍAZ|0|5|A
+16|Comercial Valery store|GROVER ACHO|0|3|C
+17|Comercial innova electrodomésticos|DANIEL PEREZ|0|3|A
+18|Comercial LA REBAJA|ALVARO JANCO|0|4|B
+19|Comercial Titantech|WILSON TORO|1|3|C
+20|Comeecial A&T|ANTONIO TERAN|0|4|A
+21|Comercial Carmen|EDGAR RODRÍGUEZ|0|5|A
+22|Comercial ADALID|ADALID GONZALES|0|5|B
+23|Comercial Vakery Storev 129|ALFREDO ACHO|0|4|C
+24|Comercial Maco|ISMAEL HUANCA|0|4|A
+25|Comercial Imagenes Reales|PATRICIA GUTIÉRREZ|0|3|C
+26|Comercial Delgado|EDGAR DELGADO|2|3|A
+28|Comercial Zambrana|MAGALI ARANDIA|2|2|C
+29|Comercial HC STORE|HÉCTOR CALCINA|3|3|A
+30|Comercial PIXEL|RAUL QUISPE FORONDA|4|3|C
+31|Comercial Cossverd electronics|EDWIN COSSIO|0|6|B
+32|Comercial CARLITA|JHON HUARACHI|0|3|C
+33|Comercial shanty|GLADYS GUTIERREZ|0|3|C
+34|Comercial Delgado|EDGAR DELGADO|0|3|A
+35|Comercial KAE|GABY ORTIZ|0|7|A
+36|Comercial A&|ANGELICA LUIZAGS|0|4|B
+37|Comeecial Belen|VERONICA CHALLAPA|1|3|A
+38|Comercial Punto smart|RIDER CALUCHO|1|2|B
+39|Comercial Adela|JORGE GOMEZ|5|2|C
+40|Comercial ADELA|JORGE GÓMEZ|5|2|C
+41|Comercial La esquina|MARINA SOLANO|5|2|B
+42|Comercial DIOS ES AMOR|SILBERIA VILLARROEL|5|2|C
+43|Comercial SPIDI GONZALES|EDUARDO GONZALES|5|2|B
+44|Comercial villaman|ALEX VILLAMN|5|2|B
+45|Comercial Braydan|BRAYAN PACO|5|2|C
+46|Comercial mael|MIGUEL VIDA|5|2|C
+47|Comercial ALI|ALISON ASUNCIÓN|5|2|C
+48|Comercial|ESTELA SEGOVIA|5|1|C
+49|Comercial Libertad|EFRAIN AGUILAR|5|1|B
+50|Comercial Delgado|FREDDY DELGADO|0|4|B
+51|Comercial KAE electronics|GABY ORTIZ|0|4|A
+52|Comercial TV WORL|GIMENA FLORES|0|3|B
+53|Comercial abdias|ADBRIAS LOPEZ|6|4|B
+54|Comercial Urkupiña|CARLOS MAGNES|1|4|B
+55|Comercial GTZ|DIEGO GUTIÉRREZ|7|2|C
+56|Comercial Torrez|GUSTAVO TORRES|7|2|C
+57|Comercial Fulltec|IVAN ARANDIA|0|4|A
+58|comercial A$T 2|ANGELICA LUIZAGA|0|4|A
+59|comercial KAE ELECTRONICS 2|GABY ORTIZ|0|2|A
+60|Comercial Angely|NORMA ALANES|0|3|C
+61|Comercial Carmen|EDGAR RODRÍGUEZ|0|5|A
+62|Comeecial IMAGENES REALES|PATRICIA GUTIÉRREZ|0|3|C
+63|Comercial mako|ISMAEL HUANCA|0|2|A
+64|Comercial A&T|ANTONIO TERAN|0|4|A
+65|Comercial A&R CENTRIC|ANGELY LUIZAGA|0|2|B
+67|Comercial TORREZ|GUSTAVO TORREZ|7|2|B
+69|Comercial ROJAS Y GARCÍA|DAVID ROJAS|7|4|B
+70|Comercial Zambrana|PABLO ZAMBRANA|2|2|C
+71|COMERCIAL HIPERHOUSE|PATRICIA VELIZ|8|5|A`
+  },
+  'SANTA CRUZ': {
+    pre: 'SAN-',
+    may: ['LUSI QUISPE', 'ABRAHAN SOTO', 'ELECTROQUISPE', 'LUCIA PACHECO'],
+    zonas: ['ISABEL LA CATÓLICA (SANTA CRUZ)', 'GRIGOTÁ (SANTA CRUZ)', 'MONTERO (SANTA CRUZ)', 'NEVAL (SANTA CRUZ)', 'INDANA (SANTA CRUZ)', 'PLAN 3000 (SANTA CRUZ)', 'FERIA BARRIO LINDO (SANTA CRUZ)'],
+    filas: `
+1|Electrocasa|JHONNY LOZA|0|3|3
+2|electroshoping|VIVIANA VILLAROEL|0|5|1
+3|comercial maita|RAMÓN JULIO MAITA|0|5|2
+4|confihogar Lupita|JULIO MAITA (HIJO)|0|2|2
+5|world electronic|MARIA ALANOCA|0|1|3
+6|comercial life store|MILTON NUÑEZ|0|2|3
+7|electrónico fronline center|MILTON NUÑEZ|0|4|3
+8|comercial San Cayetano|ARIEL TORO|0|5|2
+9|electrónico fronline center 2|MILTON NUÑEZ|0|3|3
+10|said electrodomésticos|GLADIS SÁNCHEZ|0|3|2
+11|electro fyj|JANIL MASCAYA|0|3|1
+12|comercial climático|KLISMAN FLORES|0|3|2
+13|comercial santa cruz|MARIELA CHAVEZ|0|3|3
+14|distribuidora maldito mike|MIKE DÁVILA|0|3|3
+15|combo hogar|LUCERO VARGAS|0|5|1
+16|tecno hogar|MIKE DÁVILA|0|3|3
+17|electro House premium|JUDITH FLORES|0|3|3
+18|electrodomésticos cheaps|ROBERTO MAMANI|0|9|3
+19|electrodomésticos jefecito|ADRIANA MAMANI|0|4|3
+20|comercial ll|MARGARITA CÁCERES|0|4|3
+21|comercial jossher|JUDITH FLORES|0|4|3
+22|electrónico casa TV|DANIEL SECKO|0|5|1
+23|comercial génesis|ERICK COLQUE|0|2|1
+24|comercial maikol|LUSI QUISPE|0|5|1
+25|comercial Hilton|HILDA LEON|0|10|2
+26|importadora roal|ALEX MALLON|0|2|2
+27|comercial eco electro|HAROL CASTILLO|0|2|2
+28|para tu hogar|RINA BAUTISTA|0|4|2
+29|para tu hogar 2|RINA BAUTISTA|0|4|3
+30|electrodomésticos korven|RODRIGO ROCHA|0|5|2
+31|comercial jherson|ERIK BAUTISTA|0|5|3
+32|electrodomésticos Lucy|EVA AGUIRRE|0|6|1
+33|importadora jyz|SAIDA SECKO|0|3|1
+34|comercial jheferson|JHONNY VALLEJOS|0|7|3
+35|comercial j-E|JOSÉ MARIO|0|7|2
+36|casa jaldin|RAÚL MAMANI|0|4|2
+37|centro de electrodomésticos JDE|JOSÉ CABERO|0|4|2
+38|electrodomésticos Padilla|JHONNY PADILLA|0|4|1
+39|comercial 14 de febrero|LUCY CHALLAPA|0|5|2
+40|BM electrodomésticos|OLGA MAMANI|0|8|1
+41|comercial Luana|SONIA LOPEZ|0|6|3
+42|comercial luster|LUCY CHALLAPA|0|5|3
+43|poma 1|PAMELA POMA|0|5|1
+44|comercial Mónica|VANESA PACHECO|0|6|1
+45|comercial Elaine|VANESA PACHECO|0|10|1
+46|defensa electrodomésticos|JIMMY LOPEZ|0|4|3
+47|innova hogar|KAREN BLANCO|0|5|1
+48|centro sanchez2|YAMIL SÁNCHEZ|0|2|1
+49|importadora poma|RUBÉN POMA|0|9|1
+50|electrocorp|ELY FERRUFINO|0|5|2
+51|comercial vico|ALICIA YUGAR|0|2|3
+52|tecno hogar 2|MIKE DÁVILA|0|7|3
+53|centro de electrodomésticos Ángela|PAMELA POMA|0|6|1
+54|comercial cheaps 2|JAVIER MAMANI|0|4|3
+55|centro de compras|BERSTHA MAMANI|0|5|1
+56|comercial jhon Orlando|JHON ORLANDO|0|6|2
+57|electrodomésticos Grisel|GRISEL PALERMO|0|3|1
+58|zentro|ALEX CENTENO|0|2|3
+59|comercial valentina|ARISEL ANAGUA CHOQUE|0|6|2
+60|comercial lusiel|EVA AGUIRRE|0|2|2
+61|Makro hogar|MARISOL IBÁÑEZ|0|6|3
+62|comercial CyM|MARICELA TERCEROS|0|3|2
+63|electrodomésticos Venezuela|CARLOS LABRADOR|0|8|1
+64|neftalen electrodomésticos|NEFTALEN HUAIGA SÁNCHEZ|0|7|2
+65|Hugo store|HUGO QUISPE|0|1|1
+66|comercial DM|AGELICA OQUENDO|0|4|3
+67|comercial Aguilar|JOSÉ AGUILAR|0|3|2
+68|smart electro|DEYSI CARTAGENA|0|3|3
+69|electrodomésticos lm|MARISOL IBÁÑEZ|0|4|3
+70|electrodomésticos son baraton|MALENA HUANCA|0|4|3
+71|tecno hogar 2|MAIKE DÁVILA|0|4|3
+72|comercial centrel|MILTON RÍOS|0|4|2
+73|comercial España|HAROLD ROCHA|0|6|2
+74|encorp|HAROLD ROCHA|0|6|2
+75|comercial riana|ADRIANA HURTADO|0|5|2
+76|importadora nicol|ABRAHAM SOTO|0|1|2
+77|electro Max|LIZBANIA CORTEZ|0|1|1
+78|comercial Paola|PAOLA MELGAREJO|0|1|3
+79|comercial maría Fernanda|WUALBERTO JUAN RALDES|0|4|2
+80|pixel shop|PEDRO POMA|0|2|3
+81|comercial silem|EDULINA ILAFAYA|0|3|2
+82|ilumelec home|RAIZA CASTILLO|1|3|2
+83|comercial jyr|RICHARD TAMAYO|1|3|3
+84|comercial Emilia|GABRIELA MAITA|1|3|3
+85|comercial electrocasa|PAMELA OROZCO|1|6|3
+86|comercial taffy|MILENKA GUZMÁN|1|8|3
+87|comercial Fernández|KATERINE FLORES|1|2|3
+88|casa andy|FREDDY QUIROZ|1|6|1
+89|comercial coronado|ROGER CORONADO|1|3|2
+90|comercial Valeria|VALERIANA CALDERÓN|1|2|2
+91|innovo smart|ANTONI NÚÑEZ|1|3|2
+92|eco-electro|Sin especificar|1|3|2
+93|tienda Gutiérrez|ROYER GUTIÉRREZ|1|4|2
+94|GT center|ROYER GUTIÉRREZ|1|4|2
+95|casa Quiroz|FANNY QUIROZ|1|2|1
+96|comercial Geraldine|MERI PACHECO|1|2|3
+97|ideas del sur|EVER CHINO|0|4|3
+98|mega center|RAFAEL SÁNCHEZ|0|5|3
+99|la cusine|IVÁN CARDOZO|0|4|3
+100|comercial alan|ALAN MAMANI|0|5|3
+101|comercial roja|ERWIN SÁNCHEZ|0|3|3
+102|electro max2|GADIEL URQUIZA|0|2|3
+103|comercial jr|OSMAN RIVERO|0|2|3
+104|comercial flr|FÉLIX FLORES|1|2|3
+105|tienda electroamiga|ARTURO TALAVERA|1|2|3
+106|tienda mía|JAVIER ARTEAGA|1|5|1
+107|comercial carlita|HILDA FLORES|1|6|3
+108|mega mundo|SIMON FERNÁNDEZ|1|2|3
+109|comercial km|MARIETTHA ROCHA|1|2|3
+110|comercial innovo|GIOVANNA ROJAS|1|3|3
+111|importaciones Gutiérrez|ÓSCAR ROCHA|1|4|2
+112|comercial fyl|FABIO LAVARDEN|1|5|3
+113|comercial julio|JULIO CESAR GUTIÉRREZ|1|4|3
+114|comercial Danna|ALAN CARRASCO|1|4|3
+115|comercial carolita1|JHONNY VALLEJOS|1|2|3
+116|comercial vicel|LIDIA MAMANI|1|4|3
+117|comercial ewtto1|ABRAHAM SOTO|1|2|1
+118|comercial churco|CHURCO MAMANI|1|4|2
+119|comercial siles|JOSÉ ALMARAS|2|3|3
+120|comercial Aracely|RUBÉN RODRÍGUEZ|2|6|3
+121|comercial briana|GLADIS GARCÍA|2|4|3
+122|comercial JyD|RAÚL CHAVEZ|2|3|3
+123|comercial Sandoval|PEDRO LUIS GUZMÁN|2|4|3
+124|comercial isa|LUCIA MARIANA PACHECO|2|6|1
+125|comercial rosi|LUISA PACHECO|2|3|2
+126|comercial yampara|RUDI YAMPARA|2|4|3
+127|comercial nicol y hnos|MIRIAN NINA|2|2|3
+128|comercial Fabiana|RAÚL CHAVEZ|2|3|2
+129|comercial Villegas|ARIEL VILLEGAS|2|4|3
+130|comercial Guzmán|RICHARD GUZMÁN|2|4|2
+131|comercial soe|JOSÉ MIGUEL ESCOBAR|2|2|3
+132|comercial zentro|ALEX ZENTENO|3|1|2
+133|comercial trading innovation|DIONISIA PEREZ|3|5|2
+135|trading innovation Octavio|OCTAVIO VILLAROEL|3|3|2
+136|trading innovation|OCTAVIO VILLAROEL|4|2|2
+137|electrodomésticos agustín|FREDY RIVERA|5|2|3
+138|electrodomésticos agustín|AGUSTÍN LAIME|5|2|2
+139|comercial Raúl|RAÚL VIRACOCHA|5|3|2
+140|comercial Raúl|RAÚL VIRACOCHA|5|3|2
+141|movitel|NIELSEL IVER|5|2|2
+142|saul|SAUL VIRACOCHA|5|1|2
+143|comercial nacy|NANCY CORY|5|3|3
+144|electrodomésticos SyR|SAUL VIRACOCHA|5|4|2
+145|comercial orlando|RODOLFO MALLON|6|5|3
+146|comercial Reyna|REYNA|6|4|3
+147|comercial escobar|AURORA ESCOBAR|6|4|3
+148|comercial mael|SUSNA VACA|6|4|3`
+  }
+};
+
+const SKUS = [
+  ['43E6600H', 'TV SKYWORTH 43" QLED GOOGLE TV'], ['50G6600H', 'TV SKYWORTH 50" PRO GOOGLE TV'],
+  ['50G6600K', 'TV SKYWORTH 50" PRO GOOGLE TV'], ['55G6600H', 'TV SKYWORTH 55" PRO GOOGLE TV'],
+  ['55G6600K', 'TV SKYWORTH 55" PRO GOOGLE TV'], ['55Q6600H', 'TV SKYWORTH 55" QLED GOOGLE TV'],
+  ['55Q6600K', 'TV SKYWORTH 55" QLED GOOGLE TV'], ['60G6600H', 'TV SKYWORTH 60" GOOGLE TV 4K'],
+  ['60Q6600H', 'TV SKYWORTH 60" QLED GOOGLE TV'], ['65G6600H', 'TV SKYWORTH 65" PRO GOOGLE TV'],
+  ['65G6600K', 'TV SKYWORTH 65" PRO GOOGLE TV'], ['65Q6600H', 'TV SKYWORTH 65" QLED GOOGLE TV'],
+  ['65Q6600K', 'TV SKYWORTH 65" QLED GOOGLE TV'], ['65X6600H', 'TV SKYWORTH 65" NEXO MINILED'],
+  ['75G6600H', 'TV SKYWORTH 75" PRO GOOGLE TV'], ['75G6605K', 'TV SKYWORTH 75" PRO GOOGLE TV'],
+  ['75Q6600H', 'TV SKYWORTH 75" QLED GOOGLE TV'], ['75Q6605K', 'TV SKYWORTH 75" QLED GOOGLE TV'],
+  ['75X6600H', 'TV SKYWORTH 75" NEXO MINILED'], ['86Q7700G', 'TV SKYWORTH 86" QLED GAME TV'],
+  ['100Q7800G', 'TV SKYWORTH 100" QLED 144HZ']
+].map(([sku, desc]) => ({ sku, desc }));
+
+// ===================== UTILIDADES =====================
+const $ = id => document.getElementById(id);
+const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ESC[c]);
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+const inchesOf = sku => { const m = /^(\d{2,3})/.exec(sku); return m ? m[1] + '"' : 'Otro'; };
+const cleanSerial = s => String(s || '').toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9\-_/.]/g, '');
+const SERIAL_RE = /^[A-Z0-9][A-Z0-9\-_/.]{3,39}$/;
+
+function buildDb() {
+  const regionales = {};
+  Object.keys(RAW).forEach(reg => {
+    const r = RAW[reg];
+    const pdvs = r.filas.trim().split('\n').map(line => {
+      const [nro, nombre, dueno, z, vend, clas] = line.split('|');
+      return mkPdv({ id: r.pre + nro, nro: +nro, nombre, dueno, zona: r.zonas[+z], vend: +vend, clas: clas || '' });
+    });
+    regionales[reg] = { mayoristas: r.may, pdvs };
+  });
+  return regionales;
+}
+function mkPdv(p) { p._q = norm(p.nombre + ' ' + p.dueno + ' ' + p.zona); return p; }
+const DB = buildDb();
+
+let toastTimer = null;
+function toast(text, type) {
+  $('toastText').textContent = text;
+  $('toast').className = 'toast ' + (type || '');
+  $('toast').hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { $('toast').hidden = true; }, type === 'error' ? 5500 : 3500);
+}
+function busy(text) {
+  if (text) { $('busyText').textContent = text; $('busy').hidden = false; } else { $('busy').hidden = true; }
+}
+
+// ===================== ESTADO =====================
+const S = {
+  session: null,
+  modalidad: 'VENTA CLIENTE FINAL',
+  regional: 'LA PAZ',
+  zone: 'ALL',
+  inches: 'ALL',
+  pdv: null,
+  sku: '55Q6600H',
+  metodoSerie: 'Manual',
+  fotos: { serie: '', nota: '', poliza: '' },
+  clientId: uid(),
+  records: [],
+  recordsLoaded: false,
+  sending: false
+};
+
+// ===================== API (Apps Script) =====================
+async function api(action, data) {
+  const req = { action, token: S.session ? S.session.token : '', data: data || {} };
+  let res;
+  try {
+    if (window.google && google.script && google.script.run) {
+      res = await new Promise((ok, ko) => google.script.run.withSuccessHandler(ok).withFailureHandler(ko).api(req));
+    } else {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 120000);
+      const r = await fetch(CONFIG.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(req),
+        signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      res = await r.json();
+    }
+    setNet(true);
+  } catch (e) {
+    setNet(false);
+    return { ok: false, net: true, error: 'Sin conexión con el servidor. Revisa tu señal e intenta de nuevo.' };
+  }
+  if (!res) return { ok: false, error: 'Respuesta vacía del servidor.' };
+  if (res.code === 'AUTH' && action !== 'login') logout(res.error);
+  return res;
+}
+function setNet(on) { $('netDot').classList.toggle('off', !on); }
+
+// ===================== ACCESO =====================
+async function doLogin(e) {
+  e.preventDefault();
+  const codigo = $('inpCodigo').value.trim().toUpperCase();
+  if (codigo.length < 6) { $('loginMsg').textContent = 'Ingresa tu código completo.'; return; }
+  $('btnLogin').disabled = true;
+  $('loginMsg').textContent = '';
+  const res = await api('login', { codigo });
+  $('btnLogin').disabled = false;
+  if (!res.ok) { $('loginMsg').textContent = res.error || 'No se pudo ingresar.'; return; }
+  S.session = { token: res.token, user: res.user };
+  store.set('sw_session', S.session);
+  $('inpCodigo').value = '';
+  startApp();
+  loadPdvsNuevos(res.pdvsNuevos);
+  api('session').then(r => { if (r.ok) loadPdvsNuevos(r.pdvsNuevos); });
+}
+
+function logout(msg) {
+  closeScanner();
+  S.session = null;
+  S.records = [];
+  S.recordsLoaded = false;
+  store.del('sw_session');
+  $('topbar').hidden = $('mainApp').hidden = $('tabbar').hidden = true;
+  $('viewLogin').hidden = false;
+  $('loginMsg').textContent = msg || '';
+}
+
+function startApp() {
+  const u = S.session.user;
+  $('viewLogin').hidden = true;
+  $('topbar').hidden = $('mainApp').hidden = $('tabbar').hidden = false;
+  $('userName').textContent = u.nombre;
+  $('userInfo').textContent = (u.rol === 'ADMIN' ? 'Administrador' : 'Vendedor') + ' · ' + (u.regional === 'TODAS' ? 'Todas las regionales' : u.regional);
+  $('vendedorLbl').textContent = 'Vendedor: ' + u.nombre;
+  $('btnCsv').hidden = u.rol !== 'ADMIN';
+  document.querySelector('[data-tab=history] span').firstChild.textContent = u.rol === 'ADMIN' ? 'Registros ' : 'Mis registros ';
+  const prefs = store.get('sw_prefs') || {};
+  const reg = u.regional !== 'TODAS' ? u.regional : (DB[prefs.regional] ? prefs.regional : 'LA PAZ');
+  document.querySelectorAll('#segRegional button').forEach(b => { b.disabled = u.regional !== 'TODAS' && b.dataset.v !== u.regional; });
+  $('nRegional').disabled = u.regional !== 'TODAS';
+  setRegional(reg);
+  renderInches();
+  renderModelos();
+  setModalidad(S.modalidad);
+  switchTab('form');
+  // Precarga del lector de códigos en segundo plano
+  setTimeout(() => getDetector().catch(() => {}), 1500);
+}
+
+function loadPdvsNuevos(list) {
+  (list || []).forEach(p => {
+    const reg = DB[p.regional];
+    if (!reg || reg.pdvs.some(x => x.id === p.id)) return;
+    reg.pdvs.unshift(mkPdv({ id: p.id, nro: 'NV', nombre: p.nombre, dueno: p.dueno, zona: p.zona, vend: 0, clas: 'NUEVO' }));
+  });
+  if (S.session) { renderZones(); if (!$('pdvList').hidden) renderPdvList(); }
+}
+
+// ===================== NAVEGACIÓN =====================
+function switchTab(tab) {
+  ['form', 'history', 'catalog'].forEach(t => {
+    $({ form: 'viewForm', history: 'viewHistory', catalog: 'viewCatalog' }[t]).hidden = t !== tab;
+  });
+  document.querySelectorAll('.tabbar button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  window.scrollTo(0, 0);
+  if (tab === 'history') loadRecords(false);
+  if (tab === 'catalog') renderCatalog();
+}
+
+// ===================== FORMULARIO =====================
+function setModalidad(m) {
+  S.modalidad = m;
+  document.querySelectorAll('#segModalidad button').forEach(b => b.classList.toggle('on', b.dataset.v === m));
+  const cf = m === 'VENTA CLIENTE FINAL';
+  $('slotPoliza').classList.toggle('off', !cf);
+  $('reqPoliza').hidden = !cf;
+  $('evidSub').textContent = cf ? 'Requeridas: serie, nota de venta y póliza' : 'Requeridas: serie y nota de venta (póliza opcional)';
+  updateSteps();
+}
+
+function setRegional(reg) {
+  S.regional = reg;
+  S.zone = 'ALL';
+  document.querySelectorAll('#segRegional button').forEach(b => b.classList.toggle('on', b.dataset.v === reg));
+  const prefs = store.get('sw_prefs') || {};
+  prefs.regional = reg;
+  store.set('sw_prefs', prefs);
+  renderMayoristas();
+  clearPdv();
+  renderZones();
+}
+
+function renderMayoristas() {
+  const sel = $('selMayorista');
+  const prev = sel.value;
+  let html = '<option value="">— Seleccionar mayorista —</option>';
+  html += `<optgroup label="${esc(S.regional)}">` + DB[S.regional].mayoristas.map(m => `<option>${esc(m)}</option>`).join('') + '</optgroup>';
+  Object.keys(DB).filter(r => r !== S.regional).forEach(r => {
+    html += `<optgroup label="Otras: ${esc(r)}">` + DB[r].mayoristas.map(m => `<option>${esc(m)}</option>`).join('') + '</optgroup>';
+  });
+  html += '<option>VENTA DIRECTA / OTRO</option>';
+  sel.innerHTML = html;
+  const all = [...sel.options].map(o => o.value);
+  sel.value = all.includes(prev) ? prev : '';
+  updateSteps();
+}
+
+function renderZones() {
+  const pdvs = DB[S.regional].pdvs;
+  const zonas = [...new Set(pdvs.map(p => p.zona))];
+  const chip = (v, label, n) => `<button type="button" class="chip${S.zone === v ? ' on' : ''}" data-z="${esc(v)}">${esc(label)} (${n})</button>`;
+  $('zoneChips').innerHTML = chip('ALL', 'Todas', pdvs.length) +
+    zonas.map(z => chip(z, z.replace(/\s*\([^)]*\)/g, ''), pdvs.filter(p => p.zona === z).length)).join('');
+  updatePdvCount();
+}
+
+function filteredPdvs() {
+  const q = norm($('inpPdv').value.trim());
+  const words = q.split(/\s+/).filter(Boolean);
+  return DB[S.regional].pdvs.filter(p => (S.zone === 'ALL' || p.zona === S.zone) && words.every(w => p._q.includes(w)));
+}
+function updatePdvCount() {
+  $('pdvCount').textContent = S.pdv ? 'Seleccionado' : filteredPdvs().length + ' comercios disponibles';
+}
+
+function renderPdvList() {
+  const list = filteredPdvs();
+  updatePdvCount();
+  const shown = list.slice(0, 60);
+  $('pdvList').innerHTML = shown.length
+    ? shown.map(p => `<button type="button" class="item" data-id="${esc(p.id)}"><div class="t"><b>${esc(p.nombre)}</b><small>${esc(p.dueno)} · ${esc(p.zona)}</small></div>${p.clas ? `<span class="tag">${esc(p.clas)}</span>` : ''}</button>`).join('') +
+      (list.length > shown.length ? `<div class="empty">Mostrando 60 de ${list.length}. Escribe para filtrar.</div>` : '')
+    : '<div class="empty">Sin resultados. Usa <b>+ Nuevo</b> para agregar el comercial.</div>';
+  $('pdvList').hidden = false;
+}
+
+function selectPdv(p) {
+  S.pdv = p;
+  $('pdvList').hidden = true;
+  $('inpPdv').hidden = true;
+  $('zoneChips').hidden = true;
+  $('pdvCard').hidden = false;
+  $('pdvName').textContent = p.nombre;
+  $('pdvMeta').textContent = p.dueno + ' · ' + p.zona + (p.clas ? ' · Cat. ' + p.clas : '');
+  updatePdvCount();
+  updateSteps();
+}
+function clearPdv() {
+  S.pdv = null;
+  $('inpPdv').value = '';
+  $('inpPdv').hidden = false;
+  $('zoneChips').hidden = false;
+  $('pdvCard').hidden = true;
+  $('pdvList').hidden = true;
+  updatePdvCount();
+  updateSteps();
+}
+
+function renderInches() {
+  const inches = [...new Set(SKUS.map(s => inchesOf(s.sku)))];
+  const chip = (v, label) => `<button type="button" class="chip${S.inches === v ? ' on' : ''}" data-i="${esc(v)}">${esc(label)}</button>`;
+  $('inchChips').innerHTML = chip('ALL', 'Todos') + inches.map(i => chip(i, i)).join('');
+}
+function renderModelos() {
+  const list = SKUS.filter(s => S.inches === 'ALL' || inchesOf(s.sku) === S.inches);
+  if (!list.some(s => s.sku === S.sku)) S.sku = list[0].sku;
+  $('selModelo').innerHTML = list.map(s => `<option value="${esc(s.sku)}"${s.sku === S.sku ? ' selected' : ''}>${esc(s.sku)} — ${esc(s.desc.replace('TV SKYWORTH ', ''))}</option>`).join('');
+  $('skuCount').textContent = list.length + ' modelos';
+  updateTv();
+}
+function updateTv() {
+  const s = SKUS.find(x => x.sku === S.sku) || SKUS[0];
+  $('tvIn').textContent = inchesOf(s.sku);
+  $('tvSku').textContent = s.sku;
+  $('tvDesc').textContent = s.desc;
+}
+
+function updateSteps() {
+  const fotosOk = !!(S.fotos.serie && S.fotos.nota && (S.modalidad !== 'VENTA CLIENTE FINAL' || S.fotos.poliza));
+  const done = [!!$('selMayorista').value, !!S.pdv, !!S.sku, SERIAL_RE.test(cleanSerial($('inpSerie').value)), fotosOk];
+  done.forEach((d, i) => $('n' + (i + 1)).classList.toggle('done', d));
+}
+
+// ===================== SERIE =====================
+let serieTimer = null;
+function setSerial(value, metodo) {
+  const v = cleanSerial(value);
+  $('inpSerie').value = v;
+  S.metodoSerie = metodo;
+  $('serieTag').textContent = metodo === 'Manual' ? 'Manual' : 'Escaneado';
+  $('serieTag').className = 'tag ' + (metodo === 'Manual' ? '' : 'green');
+  updateSteps();
+  checkSerie(v);
+}
+function checkSerie(v) {
+  clearTimeout(serieTimer);
+  const msg = $('serieMsg');
+  if (!v) { msg.textContent = ''; return; }
+  if (!SERIAL_RE.test(v)) { msg.className = 'msg warn'; msg.textContent = 'La serie debe tener 4 a 40 letras o números.'; return; }
+  msg.className = 'msg'; msg.textContent = 'Verificando en la nube…';
+  serieTimer = setTimeout(async () => {
+    const res = await api('checkSerie', { serie: v });
+    if (cleanSerial($('inpSerie').value) !== v) return;
+    if (!res.ok) { msg.className = 'msg warn'; msg.textContent = res.net ? 'No se pudo verificar (sin señal). Se validará al enviar.' : res.error; return; }
+    msg.className = 'msg ' + (res.existe ? 'err' : 'ok');
+    msg.textContent = res.existe ? '⚠ Esta serie YA fue registrada. Verifica la etiqueta.' : '✓ Serie disponible';
+  }, 500);
+}
+function showCandidates(cands) {
+  const box = $('serieCands');
+  if (cands.length < 2) { box.hidden = true; box.innerHTML = ''; return; }
+  box.innerHTML = '<span class="muted" style="width:100%">Se leyeron varios códigos. Toca el que corresponde a la serie (S/N):</span>' +
+    cands.slice(0, 5).map(c => `<button type="button" data-v="${esc(c.value)}">${esc(c.value)}</button>`).join('');
+  box.hidden = false;
+}
+
+// ===================== LECTURA DE CÓDIGOS DE BARRAS =====================
+const Scan = { detector: null, loading: null, native: false, stream: null, track: null, running: false, last: '', hits: 0, cams: [], camIdx: -1, torch: false, canvas: null };
+const FORMATS = ['code_128', 'code_39', 'code_93', 'ean_13', 'ean_8', 'upc_a', 'itf', 'codabar', 'qr_code', 'data_matrix'];
+
+// Lector nativo del teléfono (Android/Chrome) o zxing-cpp en WebAssembly (iPhone y demás).
+// Ambos exponen la misma API BarcodeDetector.
+function getDetector() {
+  if (Scan.detector) return Promise.resolve(Scan.detector);
+  if (!Scan.loading) {
+    Scan.loading = (async () => {
+      if ('BarcodeDetector' in window) {
+        try {
+          const sup = await window.BarcodeDetector.getSupportedFormats();
+          if (sup.includes('code_128')) {
+            Scan.native = true;
+            return new window.BarcodeDetector({ formats: FORMATS.filter(f => sup.includes(f)) });
+          }
+        } catch (e) {}
+      }
+      if (!window.BarcodeDetectionAPI) {
+        await new Promise((ok, ko) => {
+          const s = document.createElement('script');
+          s.src = CONFIG.DETECTOR_URL;
+          s.async = true;
+          s.onload = ok;
+          s.onerror = () => { s.remove(); ko(new Error('No se pudo cargar el lector de códigos (revisa tu conexión).')); };
+          document.head.appendChild(s);
+        });
+      }
+      const det = new window.BarcodeDetectionAPI.BarcodeDetector({ formats: FORMATS });
+      await det.detect(newCanvas(8, 8)); // descarga y compila el módulo WebAssembly
+      return det;
+    })().then(d => { Scan.detector = d; return d; }, e => { Scan.loading = null; throw e; });
+  }
+  return Scan.loading;
+}
+async function detectCodes(canvas) {
+  try { return (await Scan.detector.detect(canvas)).map(b => ({ value: b.rawValue, format: b.format })); } catch (e) { return []; }
+}
+
+function newCanvas(w, h) {
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w));
+  c.height = Math.max(1, Math.round(h));
+  c.getContext('2d', { willReadFrequently: true });
+  return c;
+}
+function scaled(src, maxDim) {
+  const k = Math.min(1, maxDim / Math.max(src.width, src.height));
+  if (k === 1) return src;
+  const c = newCanvas(src.width * k, src.height * k);
+  c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+  return c;
+}
+function rotated(src) {
+  const c = newCanvas(src.height, src.width);
+  const ctx = c.getContext('2d');
+  ctx.translate(c.width / 2, c.height / 2);
+  ctx.rotate(Math.PI / 2);
+  ctx.drawImage(src, -src.width / 2, -src.height / 2);
+  return c;
+}
+function cropped(src, x, y, w, h) {
+  const c = newCanvas(src.width * w, src.height * h);
+  c.getContext('2d').drawImage(src, src.width * x, src.height * y, c.width, c.height, 0, 0, c.width, c.height);
+  return c;
+}
+
+// Ordena los códigos: la serie suele ser CODE-128/39 con letras; EAN/UPC es el código del producto
+const isProduct = f => /ean|upc/.test(f || '');
+function rankCodes(list) {
+  const seen = new Map();
+  list.forEach(c => {
+    if (!c || !c.value || /:\/\//.test(c.value)) return;
+    const v = cleanSerial(c.value);
+    if (SERIAL_RE.test(v) && !seen.has(v)) seen.set(v, (c.format || '').toLowerCase());
+  });
+  const score = (v, f) => (isProduct(f) ? 0 : 10) + (/[A-Z]/.test(v) ? 4 : 0) + Math.min(v.length, 24) / 4;
+  let out = [...seen].map(([value, format]) => ({ value, format }));
+  if (out.some(c => !isProduct(c.format))) out = out.filter(c => !isProduct(c.format));
+  return out.sort((a, b) => score(b.value, b.format) - score(a.value, a.format));
+}
+
+async function decodeStill(canvas) {
+  await getDetector();
+  const base = scaled(canvas, 1600);
+  // Varias pasadas: la etiqueta completa, recorte central, menor resolución (enfoca mejor fotos movidas) y girada
+  const variants = [base, cropped(base, 0, 0.2, 1, 0.6), scaled(base, 900), rotated(base)];
+  for (const v of variants) {
+    const found = rankCodes(await detectCodes(v));
+    if (found.length) return found;
+  }
+  return [];
+}
+
+// ---------- Foto de etiqueta (cámara nativa o galería) ----------
+async function fileToCanvas(file, maxDim) {
+  let img;
+  try {
+    img = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  } catch (e) {
+    img = await new Promise((ok, ko) => {
+      const url = URL.createObjectURL(file);
+      const im = new Image();
+      im.onload = () => { URL.revokeObjectURL(url); ok(im); };
+      im.onerror = () => { URL.revokeObjectURL(url); ko(new Error('Imagen no válida')); };
+      im.src = url;
+    });
+  }
+  const w = img.width || img.naturalWidth, h = img.height || img.naturalHeight;
+  const k = Math.min(1, maxDim / Math.max(w, h));
+  const c = newCanvas(w * k, h * k);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  if (img.close) img.close();
+  return c;
+}
+const toJpeg = (canvas, maxDim, q) => scaled(canvas, maxDim).toDataURL('image/jpeg', q);
+
+async function processLabelCanvas(canvas, metodo) {
+  const dataUrl = toJpeg(canvas, 1400, 0.8);
+  setPhoto('serie', dataUrl, 'Etiqueta vinculada ✓');
+  $('scanPreview').hidden = false;
+  $('scanImg').src = dataUrl;
+  $('scanMsg').textContent = 'Leyendo código de barras…';
+  let cands = [];
+  try { cands = await decodeStill(canvas); } catch (e) { $('scanMsg').textContent = e.message; }
+  if (cands.length) {
+    setSerial(cands[0].value, metodo);
+    showCandidates(cands);
+    $('scanMsg').textContent = 'Serie detectada: ' + cands[0].value;
+    toast('Serie extraída: ' + cands[0].value);
+  } else {
+    showCandidates([]);
+    $('scanMsg').textContent = 'No se pudo leer el código. Escribe la serie impresa en la etiqueta.';
+    $('inpSerie').focus();
+    toast('Foto guardada. Escribe la serie manualmente.', 'warning');
+  }
+}
+
+async function onLabelFile(e) {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  busy('Procesando foto…');
+  try {
+    const canvas = await fileToCanvas(file, 2000);
+    busy(false);
+    await processLabelCanvas(canvas, 'Foto código de barras');
+  } catch (err) {
+    busy(false);
+    toast('No se pudo leer la imagen: ' + err.message, 'error');
+  }
+}
+
+async function onDocFile(e, slot) {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  try {
+    const canvas = await fileToCanvas(file, 1400);
+    setPhoto(slot, toJpeg(canvas, 1400, 0.72), 'Foto cargada ✓');
+  } catch (err) {
+    toast('No se pudo leer la imagen.', 'error');
+  }
+}
+
+function setPhoto(slot, dataUrl, status) {
+  S.fotos[slot] = dataUrl;
+  const key = slot[0].toUpperCase() + slot.slice(1);
+  const th = $('th' + key), st = $('st' + key);
+  const icons = { serie: '▦', nota: '🧾', poliza: '🛡' };
+  th.innerHTML = dataUrl ? `<img src="${dataUrl}" alt="">` : icons[slot];
+  st.textContent = status;
+  st.className = dataUrl ? 'ok' : '';
+  updateSteps();
+}
+
+// ---------- Escáner en vivo ----------
+function scanStatus(t) { $('scanStatus').textContent = t; }
+function scanHelp(html) { $('scanHelp').innerHTML = html; $('scanHelp').hidden = !html; }
+
+async function openScanner() {
+  $('scanner').hidden = false;
+  document.body.style.overflow = 'hidden';
+  scanHelp('');
+  $('guide').hidden = $('btnSnap').hidden = $('btnTorch').hidden = $('btnSwitchCam').hidden = true;
+  scanStatus('Iniciando cámara…');
+
+  if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    scanStatus('Cámara en vivo no disponible');
+    scanHelp('Este navegador no permite video en vivo aquí (se necesita un enlace <b>https</b>).<br>Usa <b>“Usar cámara del teléfono (foto)”</b>: la serie se lee igual desde la foto.');
+    return;
+  }
+  try {
+    await startStream();
+  } catch (err) {
+    scanStatus('Sin acceso a la cámara');
+    const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const msgs = {
+      NotAllowedError: 'Bloqueaste el permiso de cámara.<br>' + (ios
+        ? 'En iPhone: <b>Ajustes → Safari → Cámara → Permitir</b> (o toca “aA” en la barra de dirección → Configuración del sitio web → Cámara).'
+        : 'En Android: toca el <b>candado 🔒</b> junto a la dirección → <b>Permisos → Cámara → Permitir</b> y vuelve a abrir el escáner.'),
+      NotFoundError: 'No se encontró una cámara en este dispositivo.',
+      NotReadableError: 'Otra aplicación está usando la cámara. Ciérrala e intenta de nuevo.',
+      SecurityError: 'La cámara está bloqueada por la página que contiene esta app. Abre el enlace directo de la app.'
+    };
+    scanHelp((msgs[err.name] || 'No se pudo abrir la cámara (' + esc(err.name || err.message) + ').') + '<br><br>Mientras tanto usa <b>“Usar cámara del teléfono (foto)”</b>.');
+    return;
+  }
+
+  scanStatus('Cargando lector…');
+  $('btnSnap').hidden = false;
+  try { await getDetector(); } catch (e) {
+    scanStatus('Lector no disponible');
+    scanHelp(esc(e.message) + '<br>Puedes escribir la serie a mano después de tomar la foto.');
+    return;
+  }
+  if ($('scanner').hidden || !Scan.stream) return; // se cerró mientras cargaba
+  $('guide').hidden = false;
+  scanStatus('Apunta al código de barras de la serie');
+  Scan.running = true;
+  Scan.last = ''; Scan.hits = 0;
+  scanLoop();
+}
+
+async function startStream() {
+  stopStream();
+  const saved = store.get('sw_cam');
+  const video = { width: { ideal: 1920 }, height: { ideal: 1080 } };
+  if (Scan.camIdx >= 0 && Scan.cams[Scan.camIdx]) video.deviceId = { exact: Scan.cams[Scan.camIdx].deviceId };
+  else if (saved) video.deviceId = { ideal: saved };
+  else video.facingMode = { ideal: 'environment' };
+
+  Scan.stream = await navigator.mediaDevices.getUserMedia({ video, audio: false });
+  const v = $('video');
+  v.srcObject = Scan.stream;
+  await v.play().catch(() => {});
+  Scan.track = Scan.stream.getVideoTracks()[0];
+
+  const caps = Scan.track.getCapabilities ? Scan.track.getCapabilities() : {};
+  if (caps.focusMode && caps.focusMode.includes('continuous')) {
+    Scan.track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
+  }
+  Scan.torch = false;
+  $('btnTorch').hidden = !caps.torch;
+  $('btnTorch').textContent = 'Linterna';
+
+  try {
+    const devs = await navigator.mediaDevices.enumerateDevices();
+    Scan.cams = devs.filter(d => d.kind === 'videoinput');
+    const curId = Scan.track.getSettings ? Scan.track.getSettings().deviceId : '';
+    Scan.camIdx = Scan.cams.findIndex(d => d.deviceId === curId);
+    $('btnSwitchCam').hidden = Scan.cams.length < 2;
+  } catch (e) {}
+}
+
+function stopStream() {
+  if (Scan.stream) Scan.stream.getTracks().forEach(t => t.stop());
+  Scan.stream = null;
+  Scan.track = null;
+  $('video').srcObject = null;
+}
+
+function closeScanner() {
+  Scan.running = false;
+  stopStream();
+  $('scanner').hidden = true;
+  document.body.style.overflow = '';
+}
+
+async function liveFrameCodes() {
+  const v = $('video');
+  const vw = v.videoWidth, vh = v.videoHeight;
+  if (!vw || !vh) return [];
+  // Solo se analiza la zona del recuadro guía: más rápido y evita leer otros códigos de la caja
+  const cw = vw * 0.9, ch = vh * 0.45;
+  const k = Math.min(1, 1280 / cw);
+  if (!Scan.canvas) Scan.canvas = newCanvas(1, 1);
+  const c = Scan.canvas;
+  c.width = Math.round(cw * k); c.height = Math.round(ch * k);
+  c.getContext('2d').drawImage(v, (vw - cw) / 2, (vh - ch) / 2, cw, ch, 0, 0, c.width, c.height);
+  return detectCodes(c);
+}
+
+async function scanLoop() {
+  if (!Scan.running) return;
+  const t0 = performance.now();
+  try {
+    const codes = rankCodes(await liveFrameCodes());
+    const best = codes.find(c => !isProduct(c.format));
+    if (!best && codes.length) {
+      $('guide').classList.add('hit');
+      scanStatus('Ese es el código del producto (EAN). Apunta a la SERIE (S/N)');
+    } else if (best) {
+      // Se confirma cuando el mismo código se lee dos veces seguidas (evita lecturas erróneas)
+      Scan.hits = best.value === Scan.last ? Scan.hits + 1 : 1;
+      Scan.last = best.value;
+      $('guide').classList.add('hit');
+      scanStatus('Leyendo ' + best.value + '…');
+      if (Scan.hits >= 2) return confirmLive(best.value);
+    } else {
+      $('guide').classList.remove('hit');
+    }
+  } catch (e) {}
+  const wait = Math.max(40, 150 - (performance.now() - t0));
+  setTimeout(scanLoop, wait);
+}
+
+function grabFrame() {
+  const v = $('video');
+  if (!v.videoWidth) return null;
+  const c = newCanvas(v.videoWidth, v.videoHeight);
+  c.getContext('2d').drawImage(v, 0, 0);
+  return c;
+}
+
+function confirmLive(code) {
+  Scan.running = false;
+  const frame = grabFrame();
+  if (navigator.vibrate) navigator.vibrate(120);
+  closeScanner();
+  if (frame) {
+    const dataUrl = toJpeg(frame, 1400, 0.8);
+    setPhoto('serie', dataUrl, 'Etiqueta vinculada ✓');
+    $('scanPreview').hidden = false;
+    $('scanImg').src = dataUrl;
+  }
+  $('scanMsg').textContent = 'Serie detectada en vivo: ' + code;
+  showCandidates([]);
+  setSerial(code, 'Escáner en vivo');
+  toast('Serie escaneada: ' + code);
+}
+
+async function snapFrame() {
+  const frame = grabFrame();
+  if (!frame) { toast('La cámara aún no está lista.', 'warning'); return; }
+  closeScanner();
+  await processLabelCanvas(frame, 'Captura cámara en vivo');
+}
+
+async function toggleTorch() {
+  if (!Scan.track) return;
+  Scan.torch = !Scan.torch;
+  try {
+    await Scan.track.applyConstraints({ advanced: [{ torch: Scan.torch }] });
+    $('btnTorch').textContent = Scan.torch ? 'Apagar luz' : 'Linterna';
+  } catch (e) { Scan.torch = false; }
+}
+
+async function switchCamera() {
+  if (Scan.cams.length < 2) return;
+  Scan.camIdx = (Scan.camIdx + 1) % Scan.cams.length;
+  store.set('sw_cam', Scan.cams[Scan.camIdx].deviceId);
+  const wasRunning = Scan.running;
+  Scan.running = false;
+  try {
+    await startStream();
+    scanStatus('Cámara ' + (Scan.camIdx + 1) + ' de ' + Scan.cams.length);
+  } catch (e) { scanStatus('No se pudo cambiar de cámara'); }
+  if (wasRunning) { Scan.running = true; scanLoop(); }
+}
+
+// ===================== ENVÍO =====================
+function fail(msg, step) {
+  toast(msg, 'error');
+  if (step) $(step).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  return false;
+}
+
+async function submit() {
+  if (S.sending) return;
+  const serie = cleanSerial($('inpSerie').value);
+  const mayorista = $('selMayorista').value;
+  if (!mayorista) return fail('Selecciona el mayorista.', 'step1');
+  if (!S.pdv) return fail('Selecciona el comercial (PDV).', 'step2');
+  if (!S.sku) return fail('Selecciona el modelo de TV.', 'step3');
+  if (!SERIAL_RE.test(serie)) return fail('Escanea o escribe un número de serie válido.', 'step4');
+  if (!S.fotos.serie) return fail('Falta la foto de la etiqueta de serie.', 'step5');
+  if (!S.fotos.nota) return fail('Falta la foto de la nota de venta.', 'step5');
+  if (S.modalidad === 'VENTA CLIENTE FINAL' && !S.fotos.poliza) return fail('En Venta a Cliente Final la foto de la póliza es obligatoria.', 'step5');
+
+  const sku = SKUS.find(s => s.sku === S.sku);
+  const payload = {
+    clientId: S.clientId,
+    modalidad: S.modalidad,
+    regional: S.regional,
+    mayorista,
+    comercialNombre: S.pdv.nombre,
+    comercialDueno: S.pdv.dueno,
+    comercialZona: S.pdv.zona,
+    sku: sku.sku,
+    modeloDesc: sku.desc,
+    serie,
+    metodoSerie: S.metodoSerie,
+    observaciones: $('inpObs').value.trim(),
+    fotoSerie: S.fotos.serie,
+    fotoNota: S.fotos.nota,
+    fotoPoliza: S.modalidad === 'VENTA CLIENTE FINAL' || S.fotos.poliza ? S.fotos.poliza : ''
+  };
+
+  S.sending = true;
+  $('btnSubmit').disabled = true;
+  busy('Guardando en Google Sheets y subiendo fotos a Drive…');
+  const res = await api('registrar', payload);
+  busy(false);
+  S.sending = false;
+  $('btnSubmit').disabled = false;
+
+  if (!res.ok) {
+    if (res.code === 'DUPLICADO') {
+      $('serieMsg').className = 'msg err';
+      $('serieMsg').textContent = '⚠ ' + res.error;
+      return fail(res.error, 'step4');
+    }
+    return fail(res.error || 'No se pudo registrar. Intenta de nuevo.');
+  }
+
+  const rec = Object.assign({}, payload, { id: res.id, fecha: res.fecha, vendedor: S.session.user.nombre, fotos: payload.fotoPoliza ? 3 : 2 });
+  delete rec.fotoSerie; delete rec.fotoNota; delete rec.fotoPoliza;
+  if (S.recordsLoaded && !res.repetido) S.records.unshift(rec);
+  updateBadge();
+  $('doneCard').hidden = false;
+  $('doneCard').innerHTML = `<b>✓ Venta registrada en la nube</b><br>${esc(res.id)} · Serie <span class="mono">${esc(serie)}</span> · ${esc(S.pdv.nombre)}`;
+  toast(res.repetido ? 'Este registro ya estaba guardado: ' + res.id : 'Venta registrada: ' + res.id);
+  resetAfterSubmit();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Mantiene regional, mayorista, comercial y modelo para registrar varias TVs seguidas
+function resetAfterSubmit() {
+  S.clientId = uid();
+  S.metodoSerie = 'Manual';
+  $('inpSerie').value = '';
+  $('inpObs').value = '';
+  $('serieMsg').textContent = '';
+  $('serieTag').textContent = 'Manual';
+  $('serieTag').className = 'tag';
+  $('scanPreview').hidden = true;
+  showCandidates([]);
+  setPhoto('serie', '', 'Se toma al escanear');
+  setPhoto('nota', '', 'Sin foto');
+  setPhoto('poliza', '', 'Sin foto');
+}
+
+// ===================== HISTORIAL =====================
+async function loadRecords(force) {
+  if (S.recordsLoaded && !force) { renderHistory(); return; }
+  $('histInfo').textContent = 'Cargando desde Google Sheets…';
+  $('btnRefresh').disabled = true;
+  const res = await api('registros');
+  $('btnRefresh').disabled = false;
+  if (!res.ok) { $('histInfo').textContent = res.error || 'No se pudo cargar.'; return; }
+  S.records = res.registros || [];
+  S.recordsLoaded = true;
+  updateBadge();
+  renderHistory();
+}
+
+function updateBadge() {
+  const b = $('navBadge');
+  b.textContent = S.records.length;
+  b.hidden = !S.recordsLoaded;
+}
+
+function filteredRecords() {
+  const q = norm($('fSearch').value.trim());
+  const reg = $('fRegional').value, modo = $('fModo').value;
+  return S.records.filter(r =>
+    (reg === 'ALL' || r.regional === reg) &&
+    (modo === 'ALL' || r.modalidad === modo) &&
+    (!q || norm([r.serie, r.comercialNombre, r.mayorista, r.sku, r.vendedor, r.id].join(' ')).includes(q)));
+}
+
+function renderHistory() {
+  const all = S.records;
+  const cf = all.filter(r => r.modalidad === 'VENTA CLIENTE FINAL').length;
+  $('kTotal').textContent = all.length;
+  $('kSplit').textContent = cf + ' Cliente Final · ' + (all.length - cf) + ' PDV';
+  $('kLpz').textContent = all.filter(r => r.regional === 'LA PAZ').length;
+  $('kCbba').textContent = all.filter(r => r.regional === 'COCHABAMBA').length;
+  $('kScz').textContent = all.filter(r => r.regional === 'SANTA CRUZ').length;
+
+  const list = filteredRecords();
+  $('histInfo').textContent = list.length + ' de ' + all.length + ' registros · actualizado ' + new Date().toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' });
+  const labels = ['Serie', 'Nota', 'Póliza'];
+  $('histList').innerHTML = list.length ? list.slice(0, 200).map(r => `
+    <div class="rec">
+      <div class="top"><span class="serial">${esc(r.serie)}</span><span class="tag ${r.modalidad === 'VENTA A PDV' ? 'purple' : 'blue'}">${r.modalidad === 'VENTA A PDV' ? 'Venta PDV' : 'Cliente Final'}</span></div>
+      <p><b>${esc(r.comercialNombre)}</b> · ${esc(r.regional)}</p>
+      <p>${esc(r.sku)} · Mayorista: ${esc(r.mayorista)}</p>
+      <p class="muted">${esc(r.id)} · ${esc(r.fecha)} · ${esc(r.vendedor)} · ${Number(r.fotos) || 0} fotos</p>
+      ${r.urls ? `<div class="links">${r.urls.map((u, i) => u ? `<a href="${esc(u)}" target="_blank" rel="noopener">Ver ${labels[i]}</a>` : '').join('')}</div>` : ''}
+    </div>`).join('') : '<div class="card empty">No hay registros todavía.</div>';
+}
+
+function exportCsv() {
+  const rows = filteredRecords();
+  if (!rows.length) { toast('No hay registros para exportar.', 'warning'); return; }
+  const cols = ['id', 'fecha', 'modalidad', 'regional', 'vendedor', 'mayorista', 'comercialNombre', 'comercialDueno', 'comercialZona', 'sku', 'modeloDesc', 'serie', 'metodoSerie', 'observaciones'];
+  const head = ['ID', 'FECHA_HORA', 'MODALIDAD', 'REGIONAL', 'VENDEDOR', 'MAYORISTA', 'COMERCIAL_PDV', 'DUENO_PDV', 'ZONA_PDV', 'SKU', 'DESCRIPCION', 'SERIE', 'METODO_SERIE', 'OBSERVACIONES', 'FOTO_SERIE', 'FOTO_NOTA', 'FOTO_POLIZA'];
+  const cell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const lines = rows.map(r => cols.map(c => r[c]).concat(r.urls || ['', '', '']).map(cell).join(','));
+  const blob = new Blob(['﻿' + [head.map(cell).join(',')].concat(lines).join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sell_out_skyworth_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+// ===================== CATÁLOGO =====================
+function renderCatalog() {
+  const reg = $('cReg').value;
+  const words = norm($('cSearch').value.trim()).split(/\s+/).filter(Boolean);
+  const all = [];
+  Object.keys(DB).forEach(r => { if (reg === 'ALL' || reg === r) DB[r].pdvs.forEach(p => all.push([r, p])); });
+  const list = all.filter(([, p]) => words.every(w => p._q.includes(w)));
+  $('cInfo').textContent = list.length + ' comercios';
+  $('cList').innerHTML = list.slice(0, 80).map(([r, p]) =>
+    `<button type="button" class="item" data-reg="${esc(r)}" data-id="${esc(p.id)}"><div class="t"><b>${esc(p.nombre)}</b><small>${esc(p.dueno)} · ${esc(p.zona)}</small></div><span class="tag blue">${esc(r)}</span></button>`).join('') ||
+    '<div class="empty">Sin resultados.</div>';
+  $('cMay').innerHTML = Object.keys(DB).map(r => `<p style="margin-bottom:8px"><b>${esc(r)}:</b> <span class="muted">${DB[r].mayoristas.map(esc).join(' · ')}</span></p>`).join('');
+  $('cSkus').innerHTML = SKUS.map(s => `<button type="button" class="item" data-sku="${esc(s.sku)}"><div class="t"><b class="mono">${esc(s.sku)}</b><small>${esc(s.desc)}</small></div><span class="tag">Elegir</span></button>`).join('');
+}
+
+// ===================== NUEVO PDV =====================
+function openPdvModal() {
+  $('nRegional').value = S.regional;
+  $('modalPdv').hidden = false;
+  setTimeout(() => $('nNombre').focus(), 50);
+}
+async function savePdv() {
+  const data = { regional: $('nRegional').value, nombre: $('nNombre').value.trim(), dueno: $('nDueno').value.trim(), zona: $('nZona').value.trim() };
+  if (!data.nombre) { toast('Ingresa el nombre del comercial.', 'error'); return; }
+  $('btnSavePdv').disabled = true;
+  const res = await api('nuevoPdv', data);
+  $('btnSavePdv').disabled = false;
+  if (!res.ok) { toast(res.error || 'No se pudo guardar.', 'error'); return; }
+  loadPdvsNuevos([res.pdv]);
+  $('modalPdv').hidden = true;
+  ['nNombre', 'nDueno', 'nZona'].forEach(id => { $(id).value = ''; });
+  if (S.regional !== res.pdv.regional) setRegional(res.pdv.regional);
+  selectPdv(DB[res.pdv.regional].pdvs.find(p => p.id === res.pdv.id));
+  toast('Comercial guardado en la nube: ' + res.pdv.nombre);
+}
+
+// ===================== EVENTOS =====================
+function bind() {
+  $('loginForm').addEventListener('submit', doLogin);
+  $('chkVerCodigo').addEventListener('change', e => { $('inpCodigo').type = e.target.checked ? 'text' : 'password'; });
+  $('btnLogout').addEventListener('click', () => { if (confirm('¿Cerrar sesión en este teléfono?')) logout(''); });
+  document.querySelectorAll('.tabbar button').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+  $('segModalidad').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setModalidad(b.dataset.v); });
+  $('segRegional').addEventListener('click', e => { const b = e.target.closest('button'); if (b && !b.disabled) setRegional(b.dataset.v); });
+  $('selMayorista').addEventListener('change', updateSteps);
+  $('btnReset').addEventListener('click', () => { clearPdv(); resetAfterSubmit(); $('selMayorista').value = ''; $('doneCard').hidden = true; updateSteps(); toast('Formulario limpio', 'warning'); });
+
+  $('zoneChips').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.zone = b.dataset.z; renderZones(); renderPdvList(); });
+  $('inpPdv').addEventListener('focus', renderPdvList);
+  $('inpPdv').addEventListener('input', renderPdvList);
+  $('pdvList').addEventListener('click', e => {
+    const b = e.target.closest('[data-id]');
+    if (b) selectPdv(DB[S.regional].pdvs.find(p => p.id === b.dataset.id));
+  });
+  $('btnCambiarPdv').addEventListener('click', () => { clearPdv(); $('inpPdv').focus(); });
+  $('btnNuevoPdv').addEventListener('click', openPdvModal);
+  $('btnCloseModal').addEventListener('click', () => { $('modalPdv').hidden = true; });
+  $('btnSavePdv').addEventListener('click', savePdv);
+
+  $('inchChips').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.inches = b.dataset.i; renderInches(); renderModelos(); });
+  $('selModelo').addEventListener('change', e => { S.sku = e.target.value; updateTv(); updateSteps(); });
+
+  $('btnScan').addEventListener('click', openScanner);
+  $('btnCloseScan').addEventListener('click', closeScanner);
+  $('btnSnap').addEventListener('click', snapFrame);
+  $('btnTorch').addEventListener('click', toggleTorch);
+  $('btnSwitchCam').addEventListener('click', switchCamera);
+  $('lblNativeCam').addEventListener('click', () => closeScanner());
+  $('fileEtiqueta').addEventListener('change', onLabelFile);
+  $('fileNota').addEventListener('change', e => onDocFile(e, 'nota'));
+  $('filePoliza').addEventListener('change', e => onDocFile(e, 'poliza'));
+  $('inpSerie').addEventListener('input', e => {
+    const pos = e.target.selectionStart;
+    const v = cleanSerial(e.target.value);
+    if (v !== e.target.value) { e.target.value = v; try { e.target.setSelectionRange(pos, pos); } catch (x) {} }
+    S.metodoSerie = 'Manual';
+    $('serieTag').textContent = 'Manual';
+    $('serieTag').className = 'tag';
+    updateSteps();
+    checkSerie(v);
+  });
+  $('serieCands').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { setSerial(b.dataset.v, S.metodoSerie === 'Manual' ? 'Foto código de barras' : S.metodoSerie); showCandidates([]); } });
+  $('btnSubmit').addEventListener('click', submit);
+
+  $('btnRefresh').addEventListener('click', () => loadRecords(true));
+  ['fSearch', 'fRegional', 'fModo'].forEach(id => $(id).addEventListener('input', renderHistory));
+  $('btnCsv').addEventListener('click', exportCsv);
+
+  $('cReg').addEventListener('change', renderCatalog);
+  $('cSearch').addEventListener('input', renderCatalog);
+  $('cList').addEventListener('click', e => {
+    const b = e.target.closest('[data-id]');
+    if (!b) return;
+    const u = S.session.user;
+    if (u.regional !== 'TODAS' && b.dataset.reg !== u.regional) { toast('Tu usuario solo registra ventas en ' + u.regional + '.', 'warning'); return; }
+    if (S.regional !== b.dataset.reg) setRegional(b.dataset.reg);
+    selectPdv(DB[b.dataset.reg].pdvs.find(p => p.id === b.dataset.id));
+    switchTab('form');
+  });
+  $('cSkus').addEventListener('click', e => {
+    const b = e.target.closest('[data-sku]');
+    if (!b) return;
+    S.inches = 'ALL'; S.sku = b.dataset.sku;
+    renderInches(); renderModelos(); switchTab('form');
+  });
+
+  document.addEventListener('visibilitychange', () => { if (document.hidden && Scan.stream) closeScanner(); });
+  window.addEventListener('online', () => setNet(true));
+  window.addEventListener('offline', () => setNet(false));
+}
+
+bind();
+S.session = store.get('sw_session');
+if (S.session && S.session.token && S.session.user) {
+  startApp();
+  api('session').then(r => {
+    if (!r.ok) return;
+    S.session.user = r.user;
+    store.set('sw_session', S.session);
+    loadPdvsNuevos(r.pdvsNuevos);
+  });
+} else {
+  S.session = null;
+  $('viewLogin').hidden = false;
+}
+</script>
+</body>
+</html>

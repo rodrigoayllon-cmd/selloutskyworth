@@ -114,6 +114,7 @@ input:disabled,select:disabled{opacity:.6}
 .slot b{display:block;font-size:13px}
 .slot small{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .slot small.ok{color:var(--green);font-weight:600}
+.slot small.warn{color:var(--amber);font-weight:600}
 .slot label{flex:none}
 /* Barra inferior */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:6px 6px calc(6px + var(--safeB))}
@@ -881,6 +882,7 @@ const S = {
   sku: '55Q6600H',
   metodoSerie: 'Manual',
   fotos: { serie: '', nota: '', poliza: '' },
+  subidas: { serie: null, nota: null, poliza: null },
   clientId: uid(),
   records: [],
   recordsLoaded: false,
@@ -1149,8 +1151,11 @@ function getDetector() {
         try {
           const sup = await window.BarcodeDetector.getSupportedFormats();
           if (sup.includes('code_128')) {
+            const nat = new window.BarcodeDetector({ formats: FORMATS.filter(f => sup.includes(f)) });
+            // Algunos equipos lo anuncian pero el servicio no responde (p. ej. Android sin servicios de Google)
+            await nat.detect(newCanvas(8, 8));
             Scan.native = true;
-            return new window.BarcodeDetector({ formats: FORMATS.filter(f => sup.includes(f)) });
+            return nat;
           }
         } catch (e) {}
       }
@@ -1303,13 +1308,41 @@ async function onDocFile(e, slot) {
 
 function setPhoto(slot, dataUrl, status) {
   S.fotos[slot] = dataUrl;
+  S.subidas[slot] = null;
   const key = slot[0].toUpperCase() + slot.slice(1);
-  const th = $('th' + key), st = $('st' + key);
   const icons = { serie: '▦', nota: '🧾', poliza: '🛡' };
-  th.innerHTML = dataUrl ? `<img src="${dataUrl}" alt="">` : icons[slot];
-  st.textContent = status;
-  st.className = dataUrl ? 'ok' : '';
+  $('th' + key).innerHTML = dataUrl ? `<img src="${dataUrl}" alt="">` : icons[slot];
+  photoStatus(slot, status, dataUrl ? 'ok' : '');
   updateSteps();
+  if (dataUrl) uploadPhoto(slot);
+}
+function photoStatus(slot, text, cls) {
+  const st = $('st' + slot[0].toUpperCase() + slot.slice(1));
+  st.textContent = text;
+  st.className = cls;
+}
+
+// Cada foto se sube a Drive apenas se toma, mientras se completa el resto del formulario
+function uploadPhoto(slot) {
+  const up = { dataUrl: S.fotos[slot], fileId: '', error: '' };
+  S.subidas[slot] = up;
+  photoStatus(slot, 'Subiendo a Drive…', '');
+  up.promise = api('subirFoto', { foto: up.dataUrl, tipo: slot.toUpperCase(), clientId: S.clientId, regional: S.regional }).then(res => {
+    if (S.subidas[slot] !== up) return; // la foto se reemplazó mientras subía
+    if (res.ok) { up.fileId = res.fileId; photoStatus(slot, 'En Drive ✓', 'ok'); }
+    else { up.error = res.error; photoStatus(slot, res.net ? 'Sin señal: se subirá al registrar' : res.error, 'warn'); }
+  });
+}
+async function ensureUploaded(slot) {
+  if (!S.fotos[slot]) return '';
+  if (S.subidas[slot]) await S.subidas[slot].promise;
+  if (!S.subidas[slot] || !S.subidas[slot].fileId) {
+    uploadPhoto(slot);
+    await S.subidas[slot].promise;
+  }
+  const up = S.subidas[slot];
+  if (!up.fileId) throw new Error(up.error || 'No se pudo subir la foto.');
+  return up.fileId;
 }
 
 // ---------- Escáner en vivo ----------
@@ -1529,16 +1562,23 @@ async function submit() {
     modeloDesc: sku.desc,
     serie,
     metodoSerie: S.metodoSerie,
-    observaciones: $('inpObs').value.trim(),
-    fotoSerie: S.fotos.serie,
-    fotoNota: S.fotos.nota,
-    fotoPoliza: S.modalidad === 'VENTA CLIENTE FINAL' || S.fotos.poliza ? S.fotos.poliza : ''
+    observaciones: $('inpObs').value.trim()
   };
 
   S.sending = true;
   $('btnSubmit').disabled = true;
-  busy('Guardando en Google Sheets y subiendo fotos a Drive…');
-  const res = await api('registrar', payload);
+  let res;
+  try {
+    busy('Terminando de subir fotos a Drive…');
+    const ids = await Promise.all(['serie', 'nota', 'poliza'].map(ensureUploaded));
+    payload.fotoSerie = ids[0];
+    payload.fotoNota = ids[1];
+    payload.fotoPoliza = ids[2];
+    busy('Guardando en Google Sheets…');
+    res = await api('registrar', payload);
+  } catch (err) {
+    res = { ok: false, error: err.message };
+  }
   busy(false);
   S.sending = false;
   $('btnSubmit').disabled = false;

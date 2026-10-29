@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Tablero Sell-Out</title>
+<style>
+:root{
+  color-scheme:light;
+  --page:#f4f5f2;--surface:#fcfcfb;--card:#ffffff;--ink:#0b0b0b;--ink2:#52514e;--mut:#6f6e69;
+  --grid:#e1e0d9;--axis:#c3c2b7;--border:rgba(11,11,11,.10);--wash:rgba(11,11,11,.04);
+  --brand:#0f172a;--brandInk:#f8fafc;--accent:#2a78d6;
+  --r0:#2a78d6;--r1:#eb6834;--r2:#1baf7a;
+  --good:#0ca30c;--warn:#fab219;--crit:#d03b3b;--goodText:#006300;--critText:#b42323;
+  --goodBg:rgba(12,163,12,.10);--warnBg:rgba(250,178,25,.16);--critBg:rgba(208,59,59,.10);
+  --radius:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme:dark;
+    --page:#0d0d0d;--surface:#1a1a19;--card:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--mut:#9a9890;
+    --grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--wash:rgba(255,255,255,.05);
+    --brand:#111827;--accent:#3987e5;
+    --r0:#3987e5;--r1:#d95926;--r2:#199e70;
+    --goodText:#0ca30c;--critText:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0d0d0d;--surface:#1a1a19;--card:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--mut:#9a9890;
+  --grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--wash:rgba(255,255,255,.05);
+  --brand:#111827;--accent:#3987e5;
+  --r0:#3987e5;--r1:#d95926;--r2:#199e70;
+  --goodText:#0ca30c;--critText:#e66767;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,select,input{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.num,td.n,th.n{font-variant-numeric:tabular-nums}
+
+/* Barra superior */
+.top{position:sticky;top:0;z-index:20;background:var(--brand);color:var(--brandInk);padding:12px max(16px,env(safe-area-inset-left)) 12px max(16px,env(safe-area-inset-right))}
+.top .in{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#2563eb,#4f46e5);display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:.5px;flex:none}
+.top h1{margin:0;font-size:16px;font-weight:700;line-height:1.2}
+.top .sub{font-size:12px;color:#94a3b8}
+.top .sp{flex:1}
+.live{display:flex;align-items:center;gap:8px;font-size:12px;color:#cbd5e1}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px rgba(12,163,12,.25)}
+.dot.off{background:var(--crit);box-shadow:0 0 0 3px rgba(208,59,59,.25)}
+.dot.busy{animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.tbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#f8fafc;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.tbtn:hover{background:rgba(255,255,255,.14)}
+
+main{max-width:1320px;margin:0 auto;padding:18px 16px 40px}
+
+/* Filtros: una sola fila sobre los gráficos */
+.filters{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-bottom:16px}
+.fgroup{display:flex;align-items:center;gap:8px}
+.flabel{font-size:12px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.seg button:hover{background:var(--wash)}
+.seg button.on{background:var(--brand);color:#fff}
+:root[data-theme="dark"] .seg button.on{background:#f0efec;color:#0b0b0b}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .seg button.on{background:#f0efec;color:#0b0b0b}}
+.periodo{font-size:12px;color:var(--mut)}
+
+.banner{background:var(--critBg);border:1px solid var(--border);border-left:4px solid var(--crit);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-weight:500}
+.hint{background:var(--card);border:1px dashed var(--axis);border-radius:10px;padding:10px 14px;margin-bottom:14px;color:var(--ink2);font-size:13px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.card h2{margin:0;font-size:15px;font-weight:700}
+.card .cap{margin:2px 0 0;font-size:12.5px;color:var(--mut)}
+.chead{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.chead .sp{flex:1}
+.section-title{font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 10px}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.kpi{padding:16px 18px}
+.kpi .lbl{font-size:12.5px;font-weight:600;color:var(--ink2)}
+.kpi .val{font-size:34px;font-weight:750;letter-spacing:-.02em;line-height:1.1;margin:6px 0 4px}
+.kpi .val small{font-size:15px;font-weight:600;color:var(--ink2);letter-spacing:0}
+.kpi .foot{font-size:12.5px;color:var(--mut)}
+.delta{font-weight:700}
+.delta.up{color:var(--goodText)}
+.delta.down{color:var(--critText)}
+.track{position:relative;height:8px;border-radius:4px;background:var(--wash);margin-top:10px;overflow:visible}
+.track .fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--accent);max-width:100%}
+.track .mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:1px}
+.track .mark.exp{background:var(--mut)}
+
+/* Competencia por regional */
+.race{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.rcard{position:relative;padding:18px 18px 16px;overflow:hidden}
+.rcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+.rtop{display:flex;align-items:center;gap:10px}
+.rank{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--wash);color:var(--ink)}
+.rank.first{background:var(--brand);color:#fff}
+.rname{font-weight:700;font-size:15px}
+.rtop .sp{flex:1}
+.rpct{font-size:40px;font-weight:780;letter-spacing:-.02em;line-height:1;margin:14px 0 2px}
+.rpct small{font-size:14px;font-weight:600;color:var(--mut);margin-left:6px;letter-spacing:0}
+.rcard .track{height:10px;margin:12px 0 14px}
+.rcard .track .fill{background:var(--c)}
+.rmeta{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.rmeta div{font-size:12px;color:var(--mut)}
+.rmeta b{display:block;font-size:15px;color:var(--ink);font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.pill i{font-style:normal}
+.pill.good{background:var(--goodBg)} .pill.good i{color:var(--good)}
+.pill.warn{background:var(--warnBg)} .pill.warn i{color:#b07800}
+.pill.crit{background:var(--critBg)} .pill.crit i{color:var(--crit)}
+.pill.neutral{background:var(--wash);color:var(--ink2)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);flex:none}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;margin-top:12px}
+.grid2.eq{grid-template-columns:1fr 1fr}
+@media (max-width:960px){.grid2,.grid2.eq{grid-template-columns:minmax(0,1fr)}}
+
+/* Gráfico */
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .ln{width:16px;height:0;border-top:2px dashed var(--mut)}
+.chartwrap{position:relative}
+#chart{display:block;width:100%;height:300px}
+#chart text{font-size:11.5px;fill:var(--mut);font-variant-numeric:tabular-nums}
+#chart .lbl{fill:var(--ink);font-weight:700;font-size:12px}
+.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,.14);border-radius:10px;padding:9px 11px;font-size:12.5px;min-width:170px;z-index:5}
+.tip .h{font-weight:700;margin-bottom:6px}
+.tip .row{display:flex;align-items:center;gap:8px;margin-top:3px}
+.tip .row .v{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;padding-left:12px}
+.empty{padding:40px 10px;text-align:center;color:var(--mut)}
+
+/* Oportunidades */
+.opps{list-style:none;margin:0;padding:0}
+.opps li{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;padding:10px 0;border-top:1px solid var(--grid)}
+.opps li:first-child{border-top:0}
+.opps .m{font-weight:700}
+.opps .d{grid-column:2;font-size:12px;color:var(--mut)}
+.opps .v{grid-row:1 / span 2;grid-column:3;text-align:right;font-weight:750;font-variant-numeric:tabular-nums}
+.opps .v small{display:block;font-size:11.5px;font-weight:500;color:var(--mut)}
+
+/* Tablas */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -18px;padding:0 18px}
+table{border-collapse:separate;border-spacing:0;width:100%}
+th,td{padding:8px 10px;text-align:left;white-space:nowrap}
+th{font-size:11.5px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--axis);background:var(--card)}
+td{border-bottom:1px solid var(--grid)}
+th.n,td.n{text-align:right}
+tbody tr:hover td{background:var(--wash)}
+tfoot td{font-weight:750;border-top:1px solid var(--axis);border-bottom:0}
+.matrix td.cell{text-align:center;min-width:92px;padding:5px;border-left:2px solid var(--card)}
+.matrix .heat{border-radius:6px;padding:5px 6px;line-height:1.2}
+.matrix .heat b{display:block;font-size:13px}
+.matrix .heat small{font-size:11px;opacity:.85}
+.matrix th.reg{text-align:center}
+.matrix .sticky{position:sticky;left:0;z-index:1;background:var(--card)}
+.matrix tbody tr:hover td{background:var(--card)}
+.matrix tbody tr:hover .skucode{text-decoration:underline}
+.skucode{font-weight:700}
+.skudesc{display:block;font-size:11.5px;color:var(--mut)}
+.scale{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--mut);margin-top:12px;flex-wrap:wrap}
+.scale .bar{height:8px;width:160px;border-radius:4px}
+.bars{display:flex;align-items:center;gap:8px}
+.bars .b{height:8px;border-radius:0 4px 4px 0;background:var(--accent);min-width:2px}
+.btn{border:1px solid var(--border);background:var(--card);border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--wash)}
+select.btn{padding-right:28px}
+.foot-note{margin-top:22px;font-size:12px;color:var(--mut);line-height:1.6}
+
+/* Acceso */
+.login{min-height:100vh;display:grid;place-items:center;padding:16px;background:var(--brand)}
+.login form{width:100%;max-width:380px;background:var(--card);border-radius:18px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.login h1{margin:14px 0 4px;font-size:20px}
+.login p{margin:0 0 18px;color:var(--mut);font-size:13.5px}
+.login input{width:100%;font-size:16px;padding:13px 14px;border-radius:11px;border:1px solid var(--axis);background:var(--surface);letter-spacing:.15em;text-transform:uppercase}
+.login button{width:100%;margin-top:12px;padding:13px;border:0;border-radius:11px;background:#2563eb;color:#fff;font-weight:700;font-size:15px;cursor:pointer}
+.login .msg{min-height:20px;margin-top:10px;color:var(--critText);font-size:13px;font-weight:600}
+
+@media (max-width:640px){
+  main{padding:14px 12px 32px}
+  .top{padding-top:max(10px,env(safe-area-inset-top));padding-bottom:10px}
+  .top .in{gap:8px;flex-wrap:nowrap}
+  .top .logo,.top .sub{display:none}
+  .top h1{font-size:14px}
+  .top .t-long{display:none}
+  .live #liveText{display:none}
+  .tbtn{padding:6px 9px;font-size:12px}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{padding:12px}
+  .kpi .lbl{font-size:11.5px}
+  .kpi .val{font-size:22px}
+  .kpi .val small{font-size:12px}
+  .kpi .foot{font-size:11px}
+  .rpct{font-size:34px}
+  .filters{gap:10px}
+  .fgroup{width:100%;overflow-x:auto}
+  .card{padding:15px}
+  .tscroll{margin:0 -15px;padding:0 15px}
+}
+@media print{.top,.filters,.btn{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+
+<div id="login" class="login" hidden>
+  <form id="loginForm" autocomplete="off">
+    <div class="logo" style="color:#fff">SW</div>
+    <h1>Tablero gerencial Sell-Out</h1>
+    <p>Acceso para administración y gerencia. Ingresa tu código personal.</p>
+    <input id="inpCodigo" type="password" inputmode="text" autocapitalize="characters" placeholder="CÓDIGO DE ACCESO" aria-label="Código de acceso">
+    <button id="btnLogin" type="submit">Ingresar</button>
+    <div class="msg" id="loginMsg" role="alert"></div>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="in">
+      <div class="logo">SW</div>
+      <div>
+        <h1>Sell-Out Skyworth<span class="t-long"> · Objetivo 30% del inventario</span></h1>
+        <div class="sub" id="userLine"></div>
+      </div>
+      <div class="sp"></div>
+      <div class="live"><span class="dot" id="liveDot"></span><span id="liveText">Conectando…</span></div>
+      <button class="tbtn" id="btnRefresh" type="button">Actualizar</button>
+      <button class="tbtn" id="btnLogout" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="filters">
+      <div class="fgroup"><span class="flabel">Periodo</span>
+        <div class="seg" id="segPeriodo">
+          <button data-v="campana" class="on">Campaña</button><button data-v="mes">Este mes</button><button data-v="7d">7 días</button><button data-v="hoy">Hoy</button>
+        </div>
+      </div>
+      <div class="fgroup"><span class="flabel">Modalidad</span>
+        <div class="seg" id="segModalidad">
+          <button data-v="todas" class="on">Todas</button><button data-v="cf">Cliente final</button><button data-v="pdv">A PDV</button>
+        </div>
+      </div>
+      <span class="periodo" id="periodoTxt"></span>
+    </div>
+
+    <div class="banner" id="banner" hidden></div>
+    <div class="hint" id="hintFin" hidden>Para ver <b>ritmo esperado</b> y <b>proyección al cierre</b>, escribe la fecha de cierre en la pestaña <b>CAMPANA</b> del Sheet (fila FIN).</div>
+
+    <section class="kpis" id="kpis"></section>
+
+    <div class="section-title">Competencia por regional</div>
+    <section class="race" id="race"></section>
+
+    <section class="grid2">
+      <div class="card">
+        <div class="chead">
+          <div><h2>Avance acumulado vs. objetivo</h2><p class="cap">% del objetivo de cada regional, día a día</p></div>
+          <div class="sp"></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="chartwrap" id="chartWrap">
+          <svg id="chart" role="img" aria-label="Avance acumulado por regional"></svg>
+          <div class="tip" id="tip" hidden></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chead"><div><h2>Dónde está el bono pendiente</h2><p class="cap">Modelos con más bonificación por ganar hasta el objetivo</p></div></div>
+        <ul class="opps" id="opps"></ul>
+      </div>
+    </section>
+
+    <div class="card" style="margin-top:12px">
+      <div class="chead">
+        <div><h2>Avance por modelo y regional</h2><p class="cap" id="matrixCap">Vendidas / objetivo · el color indica el % de avance</p></div>
+        <div class="sp"></div>
+        <div class="seg" id="segVista"><button data-v="unidades" class="on">Unidades</button><button data-v="bono">Bonificación</button></div>
+        <select class="btn" id="selOrden" aria-label="Ordenar">
+          <option value="pendiente">Mayor bono pendiente</option>
+          <option value="avance">Menor avance</option>
+          <option value="modelo">Modelo</option>
+        </select>
+        <button class="btn" id="btnCsv" type="button">Exportar CSV</button>
+      </div>
+      <div class="tscroll"><table class="matrix" id="matrix"></table></div>
+      <div class="scale" id="scale"></div>
+    </div>
+
+    <section class="grid2 eq">
+      <div class="card">
+        <div class="chead"><div><h2>Ranking de vendedores</h2><p class="cap">Unidades del periodo e incentivo generado</p></div></div>
+        <div class="tscroll"><table id="tblVend"></table></div>
+      </div>
+      <div class="card">
+        <div class="chead"><div><h2>Mayoristas</h2><p class="cap">Unidades del periodo por canal</p></div></div>
+        <div class="tscroll"><table id="tblMay"></table></div>
+      </div>
+    </section>
+
+    <p class="foot-note" id="footNote"></p>
+  </main>
+</div>
+
+<script>
+'use strict';
+const CONFIG = {
+  // Misma implementación de Apps Script que usa la app (termina en /exec)
+  API_URL: 'https://script.google.com/macros/s/AKfycbywX5WT5g-RRQ_f3pS9oY5YMQIpro-owkNr0xX8qwQkCZajYIDvgUt0mM-0_Vkxuyq6xw/exec',
+  REFRESCO_SEG: 60
+};
+const REG = [
+  { key: 'LA PAZ', short: 'LPZ', c: 'var(--r0)' },
+  { key: 'COCHABAMBA', short: 'CBB', c: 'var(--r1)' },
+  { key: 'SANTA CRUZ', short: 'SCZ', c: 'var(--r2)' }
+];
+// Rampa secuencial (azul) para el % de avance; en modo oscuro se recorre al revés
+const RAMP = ['#cde2fb', '#b7d3f6', '#9ec5f4', '#86b6ef', '#6da7ec', '#5598e7', '#3987e5', '#2a78d6', '#256abf', '#1c5cab', '#184f95', '#104281', '#0d366b'];
+
+// ===================== UTILIDADES =====================
+const $ = id => document.getElementById(id);
+const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ESC[c]);
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const NF = new Intl.NumberFormat('es-BO');
+const n0 = v => NF.format(Math.round(v));
+const usd = v => '$' + NF.format(Math.round(v));
+const pct = r => (!isFinite(r) ? '—' : NF.format(Math.round(r * 1000) / 10) + '%');
+const pctInt = r => (!isFinite(r) ? '—' : NF.format(Math.round(r * 100)) + '%');
+const dayMs = d => Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10));
+const days = (a, b) => Math.round((dayMs(b) - dayMs(a)) / 864e5);
+const addDays = (d, k) => new Date(dayMs(d) + k * 864e5).toISOString().slice(0, 10);
+const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const fdia = d => +d.slice(8, 10) + ' ' + MESES[+d.slice(5, 7) - 1];
+const isDark = () => document.documentElement.dataset.theme === 'dark' ||
+  (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+
+// ===================== ESTADO =====================
+const D = {
+  session: store.get('sw_session'),
+  data: null,
+  periodo: 'campana',
+  modalidad: 'todas',
+  vista: 'unidades',
+  orden: 'pendiente',
+  lastOk: 0,
+  loading: false,
+  calc: null
+};
+const prefs = store.get('sw_dash_prefs') || {};
+['periodo', 'modalidad', 'vista', 'orden'].forEach(k => { if (prefs[k]) D[k] = prefs[k]; });
+
+// ===================== API =====================
+async function api(action, data) {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 60000);
+    const r = await fetch(CONFIG.API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, token: D.session ? D.session.token : '', data: data || {} }),
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    return await r.json();
+  } catch (e) {
+    return { ok: false, net: true, error: 'Sin conexión con el servidor. Se reintentará automáticamente.' };
+  }
+}
+
+// ===================== ACCESO =====================
+const puedeVer = u => u && (u.rol === 'ADMIN' || u.rol === 'GERENCIA');
+
+function showLogin(msg) {
+  $('app').hidden = true;
+  $('login').hidden = false;
+  $('loginMsg').textContent = msg || '';
+  $('inpCodigo').focus();
+}
+
+async function doLogin(e) {
+  e.preventDefault();
+  const codigo = $('inpCodigo').value.trim().toUpperCase();
+  if (codigo.length < 6) { $('loginMsg').textContent = 'Ingresa tu código completo.'; return; }
+  $('btnLogin').disabled = true;
+  const res = await api('login', { codigo });
+  $('btnLogin').disabled = false;
+  if (!res.ok) { $('loginMsg').textContent = res.error || 'No se pudo ingresar.'; return; }
+  if (!puedeVer(res.user)) { $('loginMsg').textContent = 'Este tablero es solo para administración y gerencia.'; return; }
+  D.session = { token: res.token, user: res.user };
+  store.set('sw_session', D.session);
+  $('inpCodigo').value = '';
+  startApp();
+}
+
+function logout(msg) {
+  store.del('sw_session');
+  D.session = null;
+  D.data = null;
+  showLogin(msg);
+}
+
+function startApp() {
+  $('login').hidden = true;
+  $('app').hidden = false;
+  const u = D.session.user;
+  $('userLine').textContent = u.nombre + ' · ' + (u.rol === 'ADMIN' ? 'Administración' : 'Gerencia');
+  load();
+}
+
+// ===================== CARGA EN TIEMPO REAL =====================
+async function load() {
+  if (D.loading || !D.session) return;
+  D.loading = true;
+  $('liveDot').classList.add('busy');
+  const res = await api('dashboard');
+  D.loading = false;
+  $('liveDot').classList.remove('busy');
+  if (res.code === 'AUTH') return logout(res.error);
+  if (!res.ok) {
+    $('liveDot').classList.add('off');
+    $('banner').hidden = false;
+    $('banner').textContent = res.error + (D.data ? ' Se muestran los últimos datos recibidos.' : '');
+    tickLive();
+    return;
+  }
+  $('banner').hidden = true;
+  $('liveDot').classList.remove('off');
+  D.data = res;
+  D.lastOk = Date.now();
+  render();
+  tickLive();
+}
+
+function tickLive() {
+  if (!D.lastOk) { $('liveText').textContent = 'Sin datos'; return; }
+  const s = Math.round((Date.now() - D.lastOk) / 1000);
+  const hace = s < 10 ? 'ahora' : s < 60 ? 'hace ' + s + ' s' : 'hace ' + Math.round(s / 60) + ' min';
+  $('liveText').textContent = 'En vivo · actualizado ' + hace;
+}
+
+// ===================== CÁLCULOS =====================
+function rangoPeriodo() {
+  const d = D.data, hoy = d.hoy;
+  if (D.periodo === 'hoy') return [hoy, hoy];
+  if (D.periodo === '7d') return [addDays(hoy, -6), hoy];
+  if (D.periodo === 'mes') return [hoy.slice(0, 8) + '01', hoy];
+  return [d.campana.inicio || '0000-00-00', d.campana.fin || '9999-12-31'];
+}
+
+const pasaModalidad = v => D.modalidad === 'todas' || v[3] === (D.modalidad === 'cf' ? 0 : 1);
+
+// Días de campaña: inicio (o primera venta), fin y cuánto ha transcurrido
+function ritmo() {
+  const d = D.data, c = d.campana;
+  const ventasCamp = d.ventas.filter(v => (!c.inicio || v[0] >= c.inicio));
+  const primera = ventasCamp.reduce((m, v) => (v[0] < m ? v[0] : m), d.hoy);
+  const ini = c.inicio || primera;
+  if (!c.fin || c.fin < ini) return { ini, fin: '', total: 0 };
+  const total = days(ini, c.fin) + 1;
+  const trans = Math.max(0, Math.min(total, days(ini, d.hoy) + 1));
+  return { ini, fin: c.fin, total, trans, restantes: total - trans, frac: trans / total };
+}
+
+function calcular() {
+  const d = D.data, objs = d.objetivos, tope = d.campana.tope;
+  const idx = {};
+  objs.forEach((o, i) => { idx[o.sku] = i; });
+  const [a, b] = rangoPeriodo();
+  const enPeriodo = d.ventas.filter(v => pasaModalidad(v) && v[0] >= a && v[0] <= b);
+
+  const sold = REG.map(() => objs.map(() => 0));
+  const sinObjetivo = {};
+  const vend = {}, may = {};
+  enPeriodo.forEach(v => {
+    const i = idx[v[2]];
+    if (i === undefined) sinObjetivo[v[2]] = (sinObjetivo[v[2]] || 0) + 1;
+    else sold[v[1]][i]++;
+    const inc = i === undefined ? 0 : objs[i].incentivo;
+    const kv = v[4] + '|' + v[1];
+    (vend[kv] = vend[kv] || { nombre: v[4], r: v[1], u: 0, b: 0 }).u++;
+    vend[kv].b += inc;
+    (may[v[5]] = may[v[5]] || { nombre: v[5], u: 0, r: [0, 0, 0] }).u++;
+    may[v[5]].r[v[1]]++;
+  });
+
+  const bonoDe = (inc, s, o) => inc * (tope ? Math.min(s, o) : s);
+  const regs = REG.map((R, r) => {
+    let obj = 0, u = 0, bono = 0, pot = 0, pend = 0, cumplidos = 0, conObj = 0;
+    objs.forEach((o, i) => {
+      const s = sold[r][i], ob = o.obj[r];
+      obj += ob; u += s;
+      bono += bonoDe(o.incentivo, s, ob);
+      pot += o.incentivo * ob;
+      pend += o.incentivo * Math.max(0, ob - s);
+      if (ob > 0) { conObj++; if (s >= ob) cumplidos++; }
+    });
+    return { r, R, obj, u, bono, pot, pend, cumplidos, conObj, avance: obj ? u / obj : 0 };
+  });
+
+  const opps = [];
+  objs.forEach((o, i) => REG.forEach((R, r) => {
+    const falta = Math.max(0, o.obj[r] - sold[r][i]);
+    if (falta > 0 && o.incentivo > 0) opps.push({ r, o, falta, monto: falta * o.incentivo, s: sold[r][i] });
+  }));
+  opps.sort((x, y) => y.monto - x.monto);
+
+  return {
+    rango: [a, b], enPeriodo, sold, regs, opps, sinObjetivo,
+    vend: Object.values(vend).sort((x, y) => y.u - x.u || y.b - x.b),
+    may: Object.values(may).sort((x, y) => y.u - x.u),
+    tot: regs.reduce((t, x) => ({ obj: t.obj + x.obj, u: t.u + x.u, bono: t.bono + x.bono, pot: t.pot + x.pot, pend: t.pend + x.pend }), { obj: 0, u: 0, bono: 0, pot: 0, pend: 0 })
+  };
+}
+
+// Estado frente al ritmo esperado: siempre icono + texto, nunca solo color
+function estado(avance, rt) {
+  if (avance >= 1) return { cls: 'good', icon: '✓', txt: 'Objetivo cumplido' };
+  if (!rt || !rt.total) return { cls: 'neutral', icon: '', txt: 'Faltan ' + pctInt(1 - avance) };
+  const esperado = rt.frac;
+  if (avance >= esperado * 0.95) return { cls: 'good', icon: '▲', txt: 'En ritmo' };
+  if (avance >= esperado * 0.75) return { cls: 'warn', icon: '●', txt: 'En riesgo' };
+  return { cls: 'crit', icon: '▼', txt: 'Bajo ritmo' };
+}
+
+// ===================== RENDER =====================
+function render() {
+  if (!D.data) return;
+  const C = D.calc = calcular();
+  const rt = ritmo();
+  $('hintFin').hidden = !!rt.total;
+  const [a, b] = C.rango;
+  const etiqueta = { campana: 'Toda la campaña', mes: 'Este mes', '7d': 'Últimos 7 días', hoy: 'Hoy' }[D.periodo];
+  $('periodoTxt').textContent = etiqueta + ' · ' + (a > '0000-00-00' ? fdia(a) : 'inicio') + ' – ' + (b < '9999-12-31' ? fdia(b) : 'hoy') +
+    ' · ' + n0(C.enPeriodo.length) + ' ventas registradas';
+  renderKpis(C, rt);
+  renderRace(C, rt);
+  renderChart(rt);
+  renderOpps(C);
+  renderMatrix(C);
+  renderVend(C);
+  renderMay(C);
+  const otros = Object.keys(C.sinObjetivo);
+  $('footNote').innerHTML =
+    'Objetivo por regional = suma de los objetivos por modelo de la pestaña <b>OBJETIVOS</b> (30% del inventario). ' +
+    'Bonificación = incentivo del modelo × unidades vendidas' + (D.data.campana.tope ? ', <b>con tope en el objetivo</b> de cada modelo' : ' (sin tope; se cambia en la pestaña CAMPANA)') + '. ' +
+    'Datos leídos de Google Sheets el ' + esc(D.data.generado) + '. Se actualiza cada ' + CONFIG.REFRESCO_SEG + ' s.' +
+    (otros.length ? ' Ventas de modelos sin objetivo (no suman al avance): ' + otros.map(k => esc(k) + ' (' + C.sinObjetivo[k] + ')').join(', ') + '.' : '');
+}
+
+function renderKpis(C, rt) {
+  const T = C.tot;
+  const av = T.obj ? T.u / T.obj : 0;
+  // Comparación últimos 7 días vs. 7 días previos (misma modalidad)
+  const hoy = D.data.hoy;
+  const ult = D.data.ventas.filter(v => pasaModalidad(v) && v[0] > addDays(hoy, -7)).length;
+  const prev = D.data.ventas.filter(v => pasaModalidad(v) && v[0] > addDays(hoy, -14) && v[0] <= addDays(hoy, -7)).length;
+  const dlt = prev ? (ult - prev) / prev : null;
+  const deltaHtml = dlt === null ? (ult ? 'Sin semana previa para comparar' : 'Sin ventas en 14 días')
+    : `<span class="delta ${dlt >= 0 ? 'up' : 'down'}">${dlt >= 0 ? '▲' : '▼'} ${pctInt(Math.abs(dlt))}</span> últimos 7 días vs. 7 previos`;
+
+  let proy;
+  if (rt.total) {
+    const campU = D.data.ventas.filter(v => pasaModalidad(v) && v[0] >= rt.ini && v[0] <= rt.fin).length;
+    const proyU = rt.trans ? campU / rt.trans * rt.total : 0;
+    const porDia = rt.restantes > 0 ? Math.max(0, T.obj - campU) / rt.restantes : 0;
+    const est = proyU / T.obj >= 1 ? 'up' : 'down';
+    proy = `<div class="card kpi"><div class="lbl">Proyección al cierre (${fdia(rt.fin)})</div>
+      <div class="val num">${pctInt(T.obj ? proyU / T.obj : 0)} <small>${n0(proyU)} u</small></div>
+      <div class="foot">${rt.restantes > 0 ? `<span class="delta ${est}">Se necesitan ${n0(Math.ceil(porDia))} u/día</span> · quedan ${rt.restantes} días` : 'Campaña cerrada'}</div></div>`;
+  } else {
+    const hoyU = D.data.ventas.filter(v => pasaModalidad(v) && v[0] === hoy).length;
+    proy = `<div class="card kpi"><div class="lbl">Ventas de hoy</div><div class="val num">${n0(hoyU)} <small>u</small></div>
+      <div class="foot">${n0(ult)} u en los últimos 7 días</div></div>`;
+  }
+
+  $('kpis').innerHTML = `
+    <div class="card kpi"><div class="lbl">Cumplimiento nacional</div>
+      <div class="val num">${pct(av)}</div>
+      <div class="foot">${n0(T.u)} de ${n0(T.obj)} unidades objetivo</div>
+      <div class="track"><div class="fill" style="width:${Math.min(100, av * 100)}%"></div>${rt.total ? `<div class="mark exp" style="left:${Math.min(100, rt.frac * 100)}%" title="Ritmo esperado hoy: ${pctInt(rt.frac)}"></div>` : ''}</div></div>
+    <div class="card kpi"><div class="lbl">Bonificación devengada</div>
+      <div class="val num">${usd(T.bono)}</div>
+      <div class="foot">de ${usd(T.pot)} potencial · ${pctInt(T.pot ? T.bono / T.pot : 0)} · pendiente ${usd(T.pend)}</div>
+      <div class="track"><div class="fill" style="width:${Math.min(100, T.pot ? T.bono / T.pot * 100 : 0)}%"></div></div></div>
+    <div class="card kpi"><div class="lbl">Unidades vendidas</div>
+      <div class="val num">${n0(C.enPeriodo.length)} <small>u</small></div>
+      <div class="foot">${deltaHtml}</div></div>
+    ${proy}`;
+}
+
+function renderRace(C, rt) {
+  const orden = C.regs.slice().sort((x, y) => y.avance - x.avance || y.u - x.u);
+  $('race').innerHTML = orden.map((g, k) => {
+    const st = estado(g.avance, rt);
+    const falta = Math.max(0, g.obj - g.u);
+    return `<div class="card rcard" style="--c:${g.R.c}">
+      <div class="rtop"><span class="rank ${k === 0 && g.u > 0 ? 'first' : ''}">${k + 1}</span><span class="rname">${g.R.key}</span><span class="sp"></span>
+        <span class="pill ${st.cls}">${st.icon ? `<i>${st.icon}</i>` : ''}${st.txt}</span></div>
+      <div class="rpct num">${pct(g.avance)}<small>${n0(g.u)} / ${n0(g.obj)} u</small></div>
+      <div class="track"><div class="fill" style="width:${Math.min(100, g.avance * 100)}%"></div>${rt.total ? `<div class="mark exp" style="left:${Math.min(100, rt.frac * 100)}%" title="Ritmo esperado hoy: ${pctInt(rt.frac)}"></div>` : ''}</div>
+      <div class="rmeta">
+        <div>Bonificación<b class="num">${usd(g.bono)}</b></div>
+        <div>Bono pendiente<b class="num">${usd(g.pend)}</b></div>
+        <div>Faltan para el objetivo<b class="num">${n0(falta)} u</b></div>
+        <div>Modelos cumplidos<b class="num">${g.cumplidos} de ${g.conObj}</b></div>
+      </div></div>`;
+  }).join('');
+}
+
+function renderOpps(C) {
+  const top = C.opps.slice(0, 7);
+  $('opps').innerHTML = top.length ? top.map(x => `<li style="--c:${REG[x.r].c}">
+      <span class="sw" title="${REG[x.r].key}"></span>
+      <span class="m">${REG[x.r].short} · ${esc(x.o.sku)}</span>
+      <span class="v">${usd(x.monto)}<small>faltan ${n0(x.falta)} u × ${usd(x.o.incentivo)}</small></span>
+      <span class="d">${esc(x.o.desc.replace('TV SKYWORTH ', ''))} · ${n0(x.s)} de ${n0(x.o.obj[x.r])} vendidas</span></li>`).join('')
+    : '<li class="empty" style="display:block">Todos los objetivos con incentivo están cumplidos.</li>';
+}
+
+// ---------- Gráfico de avance acumulado (SVG) ----------
+const CH = { series: [], dias: [], x: null, y: null, pad: null };
+
+function renderChart(rt) {
+  const d = D.data;
+  const objR = REG.map((R, r) => d.objetivos.reduce((s, o) => s + o.obj[r], 0));
+  const ventas = d.ventas.filter(v => pasaModalidad(v) && v[0] >= rt.ini && v[0] <= (rt.fin || d.hoy));
+  const ultimo = rt.fin && rt.fin < d.hoy ? rt.fin : d.hoy;
+  const nDias = Math.max(1, days(rt.ini, ultimo) + 1);
+  const dias = Array.from({ length: nDias }, (_, i) => addDays(rt.ini, i));
+  const porDia = REG.map(() => new Array(nDias).fill(0));
+  ventas.forEach(v => { const i = days(rt.ini, v[0]); if (i >= 0 && i < nDias) porDia[v[1]][i]++; });
+  CH.series = REG.map((R, r) => {
+    let acc = 0;
+    return { R, vals: porDia[r].map(n => { acc += n; return objR[r] ? acc / objR[r] : 0; }), u: porDia[r].map((n, i) => porDia[r].slice(0, i + 1).reduce((s, k) => s + k, 0)) };
+  });
+  CH.dias = dias;
+  CH.rt = rt;
+  $('legend').innerHTML = REG.map(R => `<span><i class="sw" style="--c:${R.c}"></i>${R.key}</span>`).join('') +
+    (rt.total ? '<span><i class="ln"></i>Ritmo esperado</span>' : '');
+  drawChart();
+}
+
+function drawChart() {
+  const svg = $('chart');
+  const W = svg.clientWidth || 600, H = 300;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const rt = CH.rt, dias = CH.dias;
+  if (!dias.length || CH.series.every(s => !s.vals[s.vals.length - 1])) {
+    svg.innerHTML = `<text x="${W / 2}" y="${H / 2}" text-anchor="middle">Aún no hay ventas en la campaña con este filtro</text>`;
+    return;
+  }
+  const pad = { l: 44, r: 92, t: 14, b: 28 };
+  const totalDias = rt.total || dias.length;
+  const maxV = Math.max(1, ...CH.series.map(s => Math.max(...s.vals)));
+  const yMax = Math.ceil(maxV * 1.08 * 4) / 4;
+  const x = i => pad.l + (totalDias <= 1 ? (W - pad.l - pad.r) / 2 : i / (totalDias - 1) * (W - pad.l - pad.r));
+  const y = v => pad.t + (1 - v / yMax) * (H - pad.t - pad.b);
+  Object.assign(CH, { x, y, pad, W, H });
+
+  let g = '';
+  for (let v = 0; v <= yMax + 1e-9; v += 0.25) {
+    g += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(${v === 0 ? '--axis' : '--grid'})" stroke-width="1"/>`;
+    g += `<text x="${pad.l - 8}" y="${y(v) + 4}" text-anchor="end">${Math.round(v * 100)}%</text>`;
+  }
+  // Línea de objetivo (100%)
+  g += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(1)}" y2="${y(1)}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  g += `<text x="${W - pad.r + 6}" y="${y(1) - 6}" style="fill:var(--ink);font-weight:700">Objetivo</text>`;
+  // Fechas del eje X
+  const ticks = Math.min(6, totalDias);
+  for (let k = 0; k < ticks; k++) {
+    const i = Math.round(k * (totalDias - 1) / Math.max(1, ticks - 1));
+    g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${fdia(addDays(rt.ini || dias[0], i))}</text>`;
+  }
+  // Ritmo esperado: de 0% al inicio a 100% al cierre
+  if (rt.total) g += `<line x1="${x(0)}" y1="${y(1 / rt.total)}" x2="${x(rt.total - 1)}" y2="${y(1)}" stroke="var(--mut)" stroke-width="1.5" stroke-dasharray="5 5"/>`;
+  // Series
+  CH.series.forEach(s => {
+    const pts = s.vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    g += `<polyline points="${pts}" fill="none" stroke="${s.R.c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  });
+  // Etiquetas directas al final de cada línea, separadas para que no choquen
+  const ends = CH.series.map(s => ({ s, yy: y(s.vals[s.vals.length - 1]), v: s.vals[s.vals.length - 1] })).sort((p, q) => p.yy - q.yy);
+  for (let k = 1; k < ends.length; k++) if (ends[k].yy - ends[k - 1].yy < 15) ends[k].yy = ends[k - 1].yy + 15;
+  const xe = x(dias.length - 1);
+  ends.forEach(e => {
+    g += `<circle cx="${xe}" cy="${y(e.v)}" r="4" fill="${e.s.R.c}" stroke="var(--card)" stroke-width="2"/>`;
+    g += `<text class="lbl" x="${Math.min(xe + 9, W - pad.r + 6)}" y="${e.yy + 4}">${e.s.R.short} ${pctInt(e.v)}</text>`;
+  });
+  g += `<g id="hover"></g><rect id="hit" x="${pad.l}" y="${pad.t}" width="${W - pad.l - pad.r}" height="${H - pad.t - pad.b}" fill="transparent"/>`;
+  svg.innerHTML = g;
+  const hit = svg.querySelector('#hit');
+  hit.addEventListener('pointermove', onChartHover);
+  hit.addEventListener('pointerleave', () => { $('tip').hidden = true; svg.querySelector('#hover').innerHTML = ''; });
+}
+
+function onChartHover(ev) {
+  const svg = $('chart');
+  const rect = svg.getBoundingClientRect();
+  const px = (ev.clientX - rect.left) * (CH.W / rect.width);
+  const span = (CH.rt.total || CH.dias.length) - 1;
+  let i = Math.round((px - CH.pad.l) / (CH.W - CH.pad.l - CH.pad.r) * span);
+  i = Math.max(0, Math.min(CH.dias.length - 1, i));
+  const xx = CH.x(i);
+  let h = `<line x1="${xx}" x2="${xx}" y1="${CH.pad.t}" y2="${CH.H - CH.pad.b}" stroke="var(--axis)" stroke-width="1"/>`;
+  CH.series.forEach(s => { h += `<circle cx="${xx}" cy="${CH.y(s.vals[i])}" r="4.5" fill="${s.R.c}" stroke="var(--card)" stroke-width="2"/>`; });
+  svg.querySelector('#hover').innerHTML = h;
+  const rows = CH.series.map(s => ({ s, v: s.vals[i], u: s.u[i] })).sort((p, q) => q.v - p.v);
+  const tip = $('tip');
+  tip.innerHTML = `<div class="h">${fdia(CH.dias[i])}${CH.rt.total ? ` · esperado ${pctInt((i + 1) / CH.rt.total)}` : ''}</div>` +
+    rows.map(r => `<div class="row"><i class="sw" style="--c:${r.s.R.c}"></i>${r.s.R.key}<span class="v">${pctInt(r.v)} · ${n0(r.u)} u</span></div>`).join('');
+  tip.hidden = false;
+  const wrapW = $('chartWrap').clientWidth;
+  const left = xx * (rect.width / CH.W);
+  tip.style.left = Math.max(0, Math.min(wrapW - tip.offsetWidth, left + 14 + tip.offsetWidth > wrapW ? left - tip.offsetWidth - 14 : left + 14)) + 'px';
+  tip.style.top = '8px';
+}
+
+// ---------- Matriz modelo × regional ----------
+function heat(p) {
+  const dark = isDark();
+  const k = Math.max(0, Math.min(RAMP.length - 1, Math.round(Math.min(1, p) * (RAMP.length - 1))));
+  const bg = dark ? RAMP[RAMP.length - 1 - k] : RAMP[k];
+  const fg = dark ? (k >= 6 ? '#0b0b0b' : '#ffffff') : (k >= 7 ? '#ffffff' : '#0b0b0b');
+  return `background:${bg};color:${fg}`;
+}
+
+function filasMatriz(C) {
+  const objs = D.data.objetivos;
+  const filas = objs.map((o, i) => {
+    const s = REG.map((R, r) => C.sold[r][i]);
+    const obj = o.obj.reduce((a, b) => a + b, 0);
+    const u = s.reduce((a, b) => a + b, 0);
+    const pend = REG.reduce((t, R, r) => t + o.incentivo * Math.max(0, o.obj[r] - s[r]), 0);
+    return { o, s, obj, u, pend, avance: obj ? u / obj : Infinity };
+  });
+  if (D.orden === 'pendiente') filas.sort((a, b) => b.pend - a.pend);
+  if (D.orden === 'avance') filas.sort((a, b) => a.avance - b.avance);
+  return filas;
+}
+
+function renderMatrix(C) {
+  const tope = D.data.campana.tope;
+  const bonoDe = (inc, s, o) => inc * (tope ? Math.min(s, o) : s);
+  const filas = filasMatriz(C);
+  const bono = D.vista === 'bono';
+  $('matrixCap').textContent = bono
+    ? 'Bonificación devengada / potencial por modelo y regional · el color indica el % de avance en unidades'
+    : 'Vendidas / objetivo · el color indica el % de avance';
+  const celda = (s, ob, inc) => {
+    if (!ob && !s) return '<td class="cell"><span style="color:var(--mut)">—</span></td>';
+    const p = ob ? s / ob : 1;
+    const style = s ? heat(p) : 'background:var(--wash);color:var(--ink2)';
+    const tit = `${n0(s)} de ${n0(ob)} u (${ob ? pctInt(p) : 'sin objetivo'}) · ${usd(bonoDe(inc, s, ob))} de ${usd(inc * ob)}`;
+    return `<td class="cell"><div class="heat" style="${style}" title="${tit}">` + (bono
+      ? `<b class="num">${usd(bonoDe(inc, s, ob))}</b><small class="num">de ${usd(inc * ob)}</small>`
+      : `<b class="num">${n0(s)}/${n0(ob)}</b><small class="num">${ob ? (p >= 1 ? '✓ ' : '') + pctInt(p) : 'sin obj.'}</small>`) + '</div></td>';
+  };
+  const head = `<thead><tr><th class="sticky">Modelo · incentivo</th>${REG.map(R => `<th class="reg"><span class="sw" style="--c:${R.c};margin-right:6px"></span>${R.short}</th>`).join('')}<th class="n">Total</th><th class="n">${bono ? 'Bono pendiente' : 'Avance'}</th></tr></thead>`;
+  const body = filas.map(f => {
+    const devengado = REG.reduce((t, R, r) => t + bonoDe(f.o.incentivo, f.s[r], f.o.obj[r]), 0);
+    return `<tr><td class="sticky"><span class="skucode">${esc(f.o.sku)}</span><span class="skudesc">${esc(f.o.desc.replace('TV SKYWORTH ', ''))} · <b>${usd(f.o.incentivo)}/u</b></span></td>
+      ${REG.map((R, r) => celda(f.s[r], f.o.obj[r], f.o.incentivo)).join('')}
+      <td class="n">${bono ? usd(devengado) : n0(f.u) + ' / ' + n0(f.obj)}</td>
+      <td class="n">${bono ? usd(f.pend) : (f.obj ? pctInt(f.u / f.obj) : '—')}</td></tr>`;
+  }).join('');
+  const T = C.tot;
+  const foot = `<tfoot><tr><td class="sticky">Total</td>${C.regs.map(g => `<td class="cell num">${bono ? usd(g.bono) + '<br><small style="font-weight:500;color:var(--mut)">de ' + usd(g.pot) + '</small>' : n0(g.u) + '/' + n0(g.obj) + '<br><small style="font-weight:500;color:var(--mut)">' + pct(g.avance) + '</small>'}</td>`).join('')}
+    <td class="n">${bono ? usd(T.bono) : n0(T.u) + ' / ' + n0(T.obj)}</td><td class="n">${bono ? usd(T.pend) : pct(T.obj ? T.u / T.obj : 0)}</td></tr></tfoot>`;
+  $('matrix').innerHTML = head + '<tbody>' + body + '</tbody>' + foot;
+  const grad = (isDark() ? RAMP.slice().reverse() : RAMP).join(',');
+  $('scale').innerHTML = `<span>0%</span><span class="bar" style="background:linear-gradient(90deg,${grad})"></span><span>100% o más del objetivo</span><span>· gris = sin ventas · — = sin objetivo</span>`;
+}
+
+function renderVend(C) {
+  const top = C.vend.slice(0, 10);
+  const max = top.length ? top[0].u : 1;
+  $('tblVend').innerHTML = `<thead><tr><th>#</th><th>Vendedor</th><th>Regional</th><th class="n">Unid.</th><th class="n">Incentivo</th></tr></thead><tbody>` +
+    (top.length ? top.map((v, k) => `<tr><td class="n">${k + 1}</td><td>${esc(v.nombre)}</td><td><span class="sw" style="--c:${REG[v.r].c};margin-right:6px"></span>${REG[v.r].short}</td>
+      <td class="n"><div class="bars" style="justify-content:flex-end"><span class="b" style="width:${Math.round(v.u / max * 60)}px"></span>${n0(v.u)}</div></td><td class="n">${usd(v.b)}</td></tr>`).join('')
+      : '<tr><td colspan="5" class="empty">Sin ventas en el periodo</td></tr>') + '</tbody>';
+}
+
+function renderMay(C) {
+  const top = C.may.slice(0, 10);
+  const total = C.enPeriodo.length || 1;
+  const max = top.length ? top[0].u : 1;
+  $('tblMay').innerHTML = `<thead><tr><th>Mayorista</th><th class="n">Unid.</th><th class="n">% del total</th></tr></thead><tbody>` +
+    (top.length ? top.map(m => `<tr><td>${esc(m.nombre)}</td>
+      <td class="n"><div class="bars" style="justify-content:flex-end"><span class="b" style="width:${Math.round(m.u / max * 60)}px"></span>${n0(m.u)}</div></td><td class="n">${pctInt(m.u / total)}</td></tr>`).join('')
+      : '<tr><td colspan="3" class="empty">Sin ventas en el periodo</td></tr>') + '</tbody>';
+}
+
+// ---------- Exportar ----------
+function exportCsv() {
+  const C = D.calc;
+  if (!C) return;
+  const tope = D.data.campana.tope;
+  const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+  const filas = [['REGIONAL', 'SKU', 'DESCRIPCION', 'INCENTIVO_USD', 'OBJETIVO', 'VENDIDAS', 'AVANCE_%', 'BONO_DEVENGADO_USD', 'BONO_POTENCIAL_USD', 'BONO_PENDIENTE_USD']];
+  REG.forEach((R, r) => D.data.objetivos.forEach((o, i) => {
+    const s = C.sold[r][i], ob = o.obj[r];
+    filas.push([R.key, o.sku, o.desc, o.incentivo, ob, s, ob ? Math.round(s / ob * 1000) / 10 : '', o.incentivo * (tope ? Math.min(s, ob) : s), o.incentivo * ob, o.incentivo * Math.max(0, ob - s)]);
+  }));
+  const csv = '﻿' + filas.map(f => f.map(q).join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'bonificacion_sellout_' + D.data.hoy + '.csv';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// ===================== EVENTOS =====================
+function bindSeg(id, key) {
+  const seg = $(id);
+  const pintar = () => seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === D[key]));
+  pintar();
+  seg.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    D[key] = b.dataset.v;
+    pintar();
+    guardarPrefs();
+    render();
+  });
+}
+function guardarPrefs() { store.set('sw_dash_prefs', { periodo: D.periodo, modalidad: D.modalidad, vista: D.vista, orden: D.orden }); }
+
+$('loginForm').addEventListener('submit', doLogin);
+$('btnLogout').addEventListener('click', () => logout());
+$('btnRefresh').addEventListener('click', load);
+$('btnCsv').addEventListener('click', exportCsv);
+bindSeg('segPeriodo', 'periodo');
+bindSeg('segModalidad', 'modalidad');
+bindSeg('segVista', 'vista');
+$('selOrden').value = D.orden;
+$('selOrden').addEventListener('change', e => { D.orden = e.target.value; guardarPrefs(); render(); });
+
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => D.data && drawChart(), 120); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => render());
+
+// Actualización automática mientras la pestaña está visible
+setInterval(() => { if (document.visibilityState === 'visible') load(); }, CONFIG.REFRESCO_SEG * 1000);
+setInterval(tickLive, 10000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && Date.now() - D.lastOk > 20000) load();
+});
+
+if (D.session && D.session.token && puedeVer(D.session.user)) startApp();
+else showLogin(D.session && D.session.user ? 'Este tablero es solo para administración y gerencia.' : '');
+</script>
+</body>
+</html>
